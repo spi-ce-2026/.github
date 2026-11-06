@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Plano dos Apps Mobile</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* Layout: coluna única com a faixa das seis sextas no topo; cada sprint tem uma coluna por app, na cor do tema de cada app. */
+  --bg: #f3f5f8;
+  --surface: #ffffff;
+  --ink: #1a2330;
+  --muted: #566170;
+  --line: #dce1e7;
+  --mentorado: #2e7d32;
+  --mentor: #1976d2;
+  --admin: #a14f00;
+  --warn: #b42318;
+  --font-display: "IBM Plex Sans Condensed", "Arial Narrow", system-ui, sans-serif;
+  --font-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #11161d;
+    --surface: #19202a;
+    --ink: #e5e9ee;
+    --muted: #9ba6b5;
+    --line: #2b3440;
+    --mentorado: #6cc070;
+    --mentor: #6bb3f2;
+    --admin: #f0a24a;
+    --warn: #f7867b;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #11161d;
+  --surface: #19202a;
+  --ink: #e5e9ee;
+  --muted: #9ba6b5;
+  --line: #2b3440;
+  --mentorado: #6cc070;
+  --mentor: #6bb3f2;
+  --admin: #f0a24a;
+  --warn: #f7867b;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.55;
+}
+.wrap { max-width: 1100px; margin: 0 auto; padding: 0 20px 64px; }
+
+h1, h2, h3, h4 { font-family: var(--font-display); line-height: 1.15; text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(2rem, 4.5vw, 2.9rem); font-weight: 700; letter-spacing: -0.01em; }
+h2 { font-size: 1.55rem; font-weight: 700; }
+h3 { font-size: 1.3rem; font-weight: 700; }
+h4 { font-size: 1rem; font-weight: 600; letter-spacing: 0.01em; }
+p { margin: 0; }
+code, .mono { font-family: var(--font-mono); font-size: 0.86em; }
+code { background: color-mix(in srgb, var(--muted) 12%, transparent); padding: 0.05em 0.35em; border-radius: 4px; overflow-wrap: anywhere; }
+td.mono { overflow-wrap: anywhere; }
+a { color: var(--mentor); }
+a:focus-visible { outline: 2px solid var(--mentor); outline-offset: 2px; }
+strong { font-weight: 600; }
+
+/* Cabeçalho */
+.top { padding: 40px 0 24px; display: grid; gap: 14px; }
+.kicker { font-family: var(--font-mono); font-size: 0.8rem; color: var(--muted); letter-spacing: 0.02em; }
+.lede { font-size: 1.1rem; max-width: 68ch; }
+.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 10px; margin: 8px 0 0; }
+.facts div { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 10px 14px; }
+.facts dt { font-size: 0.78rem; color: var(--muted); }
+.facts dd { margin: 2px 0 0; font-weight: 600; font-variant-numeric: tabular-nums; }
+.legend { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 0.88rem; color: var(--muted); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; flex: none; }
+.dot.mentorado { background: var(--mentorado); }
+.dot.mentor { background: var(--mentor); }
+.dot.admin { background: var(--admin); }
+.dot.plat { background: var(--ink); }
+
+/* Faixa das sextas */
+.fridays { list-style: none; padding: 0; margin: 8px 0 0; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; }
+.fridays li { background: var(--surface); border: 1px solid var(--line); border-top: 4px solid var(--ink); border-radius: 8px; padding: 10px 12px; display: grid; gap: 2px; align-content: start; }
+.fridays .d { font-family: var(--font-mono); font-weight: 500; font-variant-numeric: tabular-nums; }
+.fridays .k { font-size: 0.78rem; color: var(--muted); }
+.fridays .t { font-weight: 600; font-size: 0.95rem; }
+.fridays .start { border-top-color: var(--muted); }
+.fridays .holiday { border-top-color: var(--warn); }
+.fridays .holiday .k { color: var(--warn); font-weight: 600; }
+.fridays .final { border-top-width: 6px; }
+@media (max-width: 820px) { .fridays { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 440px) { .fridays { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* Seções */
+section.block { margin-top: 44px; display: grid; gap: 14px; }
+section.block > p { max-width: 74ch; }
+.note { color: var(--muted); font-size: 0.92rem; max-width: 76ch; }
+ul.plain { margin: 0; padding-left: 1.15em; display: grid; gap: 6px; max-width: 80ch; }
+
+.table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: 0.93rem; }
+th, td { text-align: left; vertical-align: top; padding: 9px 12px; border-bottom: 1px solid var(--line); }
+th { font-size: 0.78rem; font-weight: 600; color: var(--muted); letter-spacing: 0.02em; background: color-mix(in srgb, var(--muted) 6%, var(--surface)); }
+tr:last-child td { border-bottom: 0; }
+td.n { font-family: var(--font-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+td.when { white-space: nowrap; font-weight: 600; }
+
+/* Sprints */
+.sprints { display: grid; gap: 18px; }
+.sprint { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 18px; display: grid; gap: 12px; }
+.sprint-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px; }
+.sprint-head .num { font-family: var(--font-mono); font-size: 0.8rem; color: var(--muted); }
+.sprint-head .dates { font-family: var(--font-mono); font-size: 0.85rem; font-variant-numeric: tabular-nums; margin-left: auto; }
+.flag { font-size: 0.76rem; font-weight: 600; color: var(--warn); border: 1px solid var(--warn); border-radius: 999px; padding: 1px 9px; }
+.goal { max-width: 82ch; }
+.theme { font-size: 0.92rem; color: var(--muted); max-width: 82ch; }
+.theme b { color: var(--ink); font-weight: 600; }
+.apps { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; }
+.app { border: 1px solid var(--line); border-top: 3px solid var(--c); border-radius: 8px; padding: 12px 14px; display: grid; gap: 8px; align-content: start; background: color-mix(in srgb, var(--c) 4%, var(--surface)); }
+.app.mentorado { --c: var(--mentorado); }
+.app.mentor { --c: var(--mentor); }
+.app.admin { --c: var(--admin); }
+.app.plat { --c: var(--ink); }
+.app h4 { color: var(--c); display: flex; align-items: center; gap: 7px; }
+.app ul { margin: 0; padding-left: 1.05em; display: grid; gap: 6px; font-size: 0.93rem; }
+.done { border-left: 3px solid var(--ink); padding: 4px 0 4px 12px; max-width: 88ch; }
+.opt { font-size: 0.72rem; font-weight: 600; color: var(--muted); border: 1px solid var(--muted); border-radius: 999px; padding: 0 7px; margin-left: 4px; white-space: nowrap; }
+
+/* Roteiro */
+.script { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; counter-reset: passo; }
+.script li { counter-increment: passo; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 10px 14px 10px 48px; position: relative; max-width: 88ch; }
+.script li::before { content: counter(passo); position: absolute; left: 14px; top: 10px; font-family: var(--font-mono); font-weight: 500; color: var(--muted); }
+.who { font-size: 0.76rem; font-weight: 600; border-radius: 4px; padding: 0 6px; margin-right: 4px; color: var(--surface); white-space: nowrap; }
+.who.mentorado { background: var(--mentorado); }
+.who.mentor { background: var(--mentor); }
+.who.admin { background: var(--admin); }
+
+/* Prioridade: codificada pela forma, sem disputar as cores dos apps */
+.chip { display: inline-block; font-size: 0.76rem; font-weight: 600; border-radius: 999px; padding: 1px 9px; white-space: nowrap; border: 1px solid var(--muted); color: var(--muted); }
+.chip.ess { background: var(--ink); border-color: var(--ink); color: var(--surface); }
+.chip.ready { border-style: dashed; color: var(--ink); border-color: var(--ink); }
+.chip.bloq { border-color: var(--warn); color: var(--warn); }
+.cols { display: grid; gap: 18px; }
+.cols h3 { display: flex; align-items: center; gap: 8px; }
+
+/* Armadilhas */
+.traps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 10px; }
+.traps li { background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--warn); border-radius: 8px; padding: 10px 14px; font-size: 0.93rem; }
+.traps b { display: block; font-weight: 600; margin-bottom: 2px; }
+
+footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; max-width: 88ch; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <p class="kicker">UberHub Mentorias · Apps mobile · 06/11 a 11/12/2026</p>
+  <h1>Plano dos apps mobile</h1>
+  <p class="lede">Cinco entregas semanais para construir o app do mentorado, o app do mentor e o app do administrador em React Native com Expo, a partir de um starter com o login pronto e sobre o backend que já existe.</p>
+  <dl class="facts">
+    <div><dt>Período</dt><dd>06/11 → 11/12/2026</dd></div>
+    <div><dt>Entregas</dt><dd>5, sempre às sextas</dd></div>
+    <div><dt>Por semana</dt><dd>4 aulas na sexta + 3 h EAD</dd></div>
+    <div><dt>Tempo por pessoa</dt><dd>≈ 28 h (13 h 20 de aula + 15 h EAD)</dd></div>
+  </dl>
+  <div class="legend" aria-label="Cores dos apps">
+    <span><i class="dot mentorado"></i>App do mentorado (<code>mentoradoApp</code>)</span>
+    <span><i class="dot mentor"></i>App do mentor (<code>mentorApp</code>)</span>
+    <span><i class="dot admin"></i>App do administrador (<code>adminApp</code>)</span>
+  </div>
+  <ol class="fridays" aria-label="As seis sextas do período">
+    <li class="start"><span class="d">06/11</span><span class="k">Início</span><span class="t">Abertura e sprint 1</span></li>
+    <li><span class="d">13/11</span><span class="k">Entrega 1</span><span class="t">Ambiente e primeiras telas</span></li>
+    <li class="holiday"><span class="d">20/11</span><span class="k">Feriado · Entrega 2</span><span class="t">Cadastro, aprovação e vouchers</span></li>
+    <li><span class="d">27/11</span><span class="k">Entrega 3</span><span class="t">Acompanhamento</span></li>
+    <li><span class="d">04/12</span><span class="k">Entrega 4</span><span class="t">Sessão e avaliação</span></li>
+    <li class="final"><span class="d">11/12</span><span class="k">Entrega final</span><span class="t">Acabamento e apresentação</span></li>
+  </ol>
+</header>
+
+<section class="block" id="premissas">
+  <h2>Premissas</h2>
+  <ul class="plain">
+    <li><strong>Ponto de partida.</strong> O starter está publicado em três repositórios da organização <code>mentoria-iftm</code>, um por app: <a href="https://github.com/mentoria-iftm/mentorado">mentorado</a>, <a href="https://github.com/mentoria-iftm/mentor">mentor</a> e <a href="https://github.com/mentoria-iftm/administrador">administrador</a>. Ele traz os apps configurados, o login Google pronto, a navegação base com telas vazias, lint, testes e CI (<a href="#starter">detalhes abaixo</a>). As telas, as chamadas de domínio e as regras de negócio são implementadas pelos alunos. Os alunos não recebem o código do backend: usam o que está no ar no Heroku. Cada repositório traz a referência da API do seu app (<code>docs/API.md</code>), a especificação com os casos de uso UC01 a UC22 e os mockups (<code>docs/projeto</code>).</li>
+    <li><strong>Equipes.</strong> Três equipes de tamanho parecido, uma por app e por repositório. Cada repositório tem uma cópia do pacote de login, <code>packages/auth</code>: uma mudança nele é combinada com o professor, que a leva para os outros dois.</li>
+    <li><strong>Prioridade.</strong> <span class="chip ess">Essencial</span> é o que o <a href="#roteiro">roteiro de ponta a ponta</a> exige. <span class="chip">Desejável</span> entra se sobrar tempo e é a primeira coisa a cortar quando a sprint atrasar.</li>
+    <li><strong>Backend fora do escopo.</strong> O que depende de mudança no backend fica de fora (<a href="#fora">lista no fim</a>).</li>
+    <li><strong>Só Android.</strong> Os apps rodam em <em>development build</em> (<code>npx expo run:android</code>), porque o login Google nativo não funciona no Expo Go.</li>
+    <li><strong>Carga.</strong> Aulas de 50 min. São quatro sextas de aula com desenvolvimento (06/11, 13/11, 27/11 e 04/12) e cinco semanas de EAD; a aula de 11/12 fica para as apresentações.</li>
+    <li><strong>20/11 é feriado nacional</strong> (Dia Nacional de Zumbi e da Consciência Negra, Lei 14.759/2023). A entrega 2 é feita pelo GitHub, e a sprint 3 só tem as 3 h de EAD. Se o calendário do IFTM tiver aula nesse dia, a sprint 3 volta à carga normal.</li>
+  </ul>
+</section>
+
+<section class="block" id="preparacao">
+  <h2>Preparação do professor</h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Quando</th><th>O que fazer</th><th>Por quê</th></tr></thead>
+      <tbody>
+        <tr><td class="when">Feito em 06/11</td><td>Starter publicado na <code>main</code> e na <code>develop</code> dos repositórios <code>mentorado</code>, <code>mentor</code> e <code>administrador</code>. O PR #1 do <code>administrador</code> ("Tela login") ficou em conflito com o starter: fechar ou refazer sobre ele.</td><td>Os repositórios têm só os apps, sem o backend.</td></tr>
+        <tr><td class="when">Até 13/11</td><td>Publicar no Heroku o backend da <code>main</code> do <code>mentorias-starter</code>, que tem as correções de sessão (401 para token vencido).</td><td>Os alunos só têm acesso a esse backend; sem o deploy, a renovação de sessão do starter não dispara.</td></tr>
+        <tr><td class="when">06/11</td><td>Distribuir pelo ambiente virtual os valores do <code>.env</code> (<code>EXPO_PUBLIC_FIREBASE_*</code> e <code>EXPO_PUBLIC_GOOGLE_CLIENT_ID</code>), que são iguais nos três apps, exceto o App ID.</td><td>O <code>.env</code> não vai para o Git, e sem ele o login não funciona.</td></tr>
+        <tr><td class="when">06/11</td><td>Criar o quadro no GitHub Projects com uma issue por item do backlog e os labels <code>mentorado-app</code>, <code>mentor-app</code> e <code>admin-app</code>.</td><td>As equipes escolhem as issues na planning da aula 3.</td></tr>
+        <tr><td class="when">Até 10/11</td><td>Registrar no projeto Firebase <code>mentorias-uberhub</code> o app Android <code>com.professorangoti.adminApp</code>, com o SHA-1 de debug <code>5E:8F:16:06:…</code> (é o do certificado que o <code>expo prebuild</code> gera, igual em todas as máquinas, e já está cadastrado no app do mentor). Conferir o mesmo SHA-1 no app do mentorado. Baixar o <code>google-services.json</code> de novo e usar o mesmo arquivo nos três apps.</td><td>Sem isso, o login Google falha no app do administrador.</td></tr>
+        <tr><td class="when">Até 10/11</td><td>Dar o papel de administrador às contas Google da equipe do administrador no backend de integração: <code>"role": "MENTEE,ADMIN"</code> em <code>auth_db.users</code>.</td><td>Não há endpoint público que crie administrador.</td></tr>
+        <tr><td class="when">Até 04/12</td><td>Cadastrar no Firebase o SHA-1 do certificado que o EAS usa em cada app (aparece em <code>eas credentials</code>).</td><td>O APK do EAS é assinado com outro certificado; sem o cadastro, o login falha no APK instalado.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="block" id="starter">
+  <h2>O que vem no starter</h2>
+  <p>Um repositório por app, com o app na raiz. O <code>README.md</code> de cada um explica a instalação e o uso para os alunos, e o <code>docs/API.md</code> traz os endpoints do app.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Item</th><th>O que já está pronto</th></tr></thead>
+      <tbody>
+        <tr><td>Base</td><td>Expo SDK 57 (React Native 0.86, React 19.2), JavaScript, React Navigation 7 e React Native Paper, nos três apps</td></tr>
+        <tr><td>Repositório</td><td>O app na raiz e uma cópia do pacote em <code>packages/auth</code>, ligados por um npm workspace, com um único <code>package-lock.json</code>; <code>docs/API.md</code>, <code>docs/projeto</code> e templates de issue e pull request</td></tr>
+        <tr><td>Login e sessão</td><td>Pacote <code>@mentorias/auth</code>: Google Sign-In nativo, Firebase, <code>POST /auth/login</code>, sessão restaurada ao abrir o app, renovação do token em 401 e logout. As telas usam <code>useAuth()</code></td></tr>
+        <tr><td>Cliente HTTP</td><td><code>api</code> (Axios) com a URL do <code>.env</code> e o token; cada app tem um <code>src/services/api.js</code> de exemplo</td></tr>
+        <tr><td>Navegação</td><td>Mentorado: Login, abas Início e Conta. Mentor: Login, cadastro do perfil, espera pela aprovação e abas Mentorias e Conta, escolhidos pelo <em>hook</em> <code>useMentorProfile</code>, que devolve um valor fixo. Administrador: Login, tela "Acesso restrito" para quem não tem <code>ADMIN</code> e abas Início, Mentores, Vouchers, Usuários e Conta</td></tr>
+        <tr><td>Telas</td><td>Login e Conta prontas; as demais vazias, cada uma com o caso de uso que entra nela</td></tr>
+        <tr><td>Componentes</td><td><code>LoadingSpinner</code>, <code>EmptyState</code> e <code>ErrorDisplay</code></td></tr>
+        <tr><td>Qualidade</td><td>ESLint, Jest com React Native Testing Library, testes de exemplo do app e do pacote, e CI no GitHub Actions com lint e testes dos dois bloqueando o PR</td></tr>
+        <tr><td>Configuração</td><td><code>app.config.js</code> lendo o <code>.env</code>; <code>.env.example</code> e <code>eas.json</code> em cada app</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="block" id="semana">
+  <h2>Como funciona cada semana</h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Momento</th><th>Duração</th><th>O que acontece</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Aula 1</strong> (sexta)</td><td class="n">50 min</td><td>Entrega da semana: cada equipe demonstra, em até 10 min, o que está na tag <code>sprint-N</code>, rodando contra o backend de integração. Em 06/11, apresentação do projeto, deste plano e formação das equipes.</td></tr>
+        <tr><td><strong>Aula 2</strong></td><td class="n">50 min</td><td>Conteúdo técnico da semana (indicado em cada sprint).</td></tr>
+        <tr><td><strong>Aulas 3 e 4</strong></td><td class="n">100 min</td><td>Planning de 15 min (a equipe escolhe as issues da sprint) e desenvolvimento em equipe, com o professor tirando dúvidas.</td></tr>
+        <tr><td><strong>EAD</strong></td><td class="n">3 h</td><td>Terminar as issues, abrir os pull requests e revisar o PR de um colega.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="done"><strong>O que conta como entrega:</strong> o que estiver na branch <code>develop</code>, com o CI verde, no início da aula 1 de sexta. Nesse momento o professor cria a tag <code>sprint-N</code>, que é a versão avaliada.</p>
+</section>
+
+<section class="block" id="sprints">
+  <h2>Sprints</h2>
+  <div class="sprints">
+
+    <article class="sprint" id="sprint-1">
+      <div class="sprint-head"><span class="num">Sprint 1</span><h3>Ambiente e primeiras telas</h3><span class="dates">06/11 → entrega 13/11</span></div>
+      <p class="goal"><strong>Objetivo:</strong> todos rodam o seu app no emulador com login Google, e cada equipe entrega a primeira funcionalidade que lê e grava dados no backend.</p>
+      <p class="theme"><b>Aula 2:</b> o starter por dentro (workspace, <code>useAuth</code>, <code>api</code>, <code>RootNavigator</code>), <em>development build</em>, Git e pull request.</p>
+      <div class="apps">
+        <section class="app plat"><h4>Todas as equipes</h4><ul>
+          <li>Instalar com <code>npm ci</code> na raiz do repositório, criar o <code>.env</code>, rodar <code>npx expo prebuild -p android --clean</code> e <code>npx expo run:android</code>, e entrar com Google no emulador.</li>
+          <li>Começar o primeiro build Android nas aulas 3 e 4: ele é demorado.</li>
+        </ul></section>
+        <section class="app mentorado"><h4><i class="dot mentorado"></i>Mentorado</h4><ul>
+          <li>UC04 Resgatar voucher, com mensagem para <code>invalid_or_expired_voucher</code>.</li>
+          <li>Créditos na Início: o número de vouchers <code>redeemed</code> de <code>GET /admin/vouchers/mine</code>.</li>
+        </ul></section>
+        <section class="app mentor"><h4><i class="dot mentor"></i>Mentor</h4><ul>
+          <li>Implementar o <code>useMentorProfile</code> com <code>GET /profiles/mentor/{user.id}</code> (404 = sem perfil), para a navegação seguir o perfil real.</li>
+          <li>Tela própria para o perfil <code>REJECTED</code>, separada da espera pela aprovação.</li>
+        </ul></section>
+        <section class="app admin"><h4><i class="dot admin"></i>Administrador</h4><ul>
+          <li>UC20 Usuários: listar, filtrar por papel, status, nome ou e-mail, e suspender ou reativar com confirmação. Pedir uma segunda confirmação para suspender outro administrador (RN71).</li>
+        </ul></section>
+      </div>
+      <p class="done"><strong>Entrega 13/11:</strong> login nos três apps no emulador, e a primeira funcionalidade de cada um funcionando contra o backend.</p>
+    </article>
+
+    <article class="sprint" id="sprint-2">
+      <div class="sprint-head"><span class="num">Sprint 2</span><h3>Cadastro, aprovação e vouchers</h3><span class="flag">Entrega em feriado</span><span class="dates">13/11 → entrega 20/11</span></div>
+      <p class="goal"><strong>Objetivo:</strong> o mentor cria o perfil e o administrador o aprova; o administrador gera vouchers, e o mentorado usa um deles para solicitar uma mentoria.</p>
+      <p class="theme"><b>Aula 2:</b> formulários com validação e tratamento de erro pelo campo <code>error</code> das respostas.</p>
+      <div class="apps">
+        <section class="app mentorado"><h4><i class="dot mentorado"></i>Mentorado</h4><ul>
+          <li>UC05 Solicitar mentoria: tags por categoria (<code>GET /tags</code>) e <code>POST /mentorships</code>; o erro <code>voucher_required</code> leva à tela de resgate.</li>
+          <li>Tela de espera enquanto a mentoria estiver em <code>pending_match</code>.</li>
+        </ul></section>
+        <section class="app mentor"><h4><i class="dot mentor"></i>Mentor</h4><ul>
+          <li>UC10 e UC11 Criar perfil: minibio, áreas escolhidas entre as tags (pelo menos uma, RN54) e link de agendamento com URL válida (RN55).</li>
+          <li>Quando o perfil passar a <code>APPROVED</code>, refazer o login no backend para receber o <code>ROLE_MENTOR</code>. Exige uma função nova na cópia do <code>@mentorias/auth</code> do repositório do mentor; combine com o professor.</li>
+        </ul></section>
+        <section class="app admin"><h4><i class="dot admin"></i>Administrador</h4><ul>
+          <li>UC16 Aprovar ou reprovar mentor: lista de pendentes, detalhe do perfil e confirmação antes de aprovar ou reprovar.</li>
+          <li>UC17 Gerar vouchers em lote e um por vez; copiar e compartilhar os códigos gerados.</li>
+        </ul></section>
+      </div>
+      <p class="done"><strong>Entrega 20/11 (feriado):</strong> o professor cria a tag <code>sprint-2</code> às 23h59 de 20/11, e cada equipe posta no ambiente virtual um vídeo de até 3 min com a demo. A demo ao vivo fica para a aula 1 de 27/11.</p>
+    </article>
+
+    <article class="sprint" id="sprint-3">
+      <div class="sprint-head"><span class="num">Sprint 3</span><h3>Acompanhamento</h3><span class="flag">Sem aula presencial</span><span class="dates">20/11 → entrega 27/11</span></div>
+      <p class="goal"><strong>Objetivo:</strong> o mentorado acompanha a mentoria e vê o mentor; o mentor vê as mentorias atribuídas. O escopo é menor porque a semana só tem as 3 h de EAD; o que sobrar vai para as pendências das sprints 1 e 2.</p>
+      <p class="theme"><b>Material EAD:</b> listas com <code>FlatList</code> (filtros, puxar para atualizar, estados vazio e carregando) e testes com Jest e React Native Testing Library.</p>
+      <div class="apps">
+        <section class="app mentorado"><h4><i class="dot mentorado"></i>Mentorado</h4><ul>
+          <li>UC09 Mentorias do usuário na Início, com o status em linguagem simples (ex.: <code>matched</code> = "aguardando agendamento").</li>
+          <li>UC06 Ver o perfil do mentor atribuído e abrir o link de agendamento externo.</li>
+        </ul></section>
+        <section class="app mentor"><h4><i class="dot mentor"></i>Mentor</h4><ul>
+          <li>UC15 Lista de mentorias (<code>GET /mentorships/mentor</code>), com filtro por status.</li>
+        </ul></section>
+        <section class="app admin"><h4><i class="dot admin"></i>Administrador</h4><ul>
+          <li>UC18 Gerenciar vouchers: filtrar por status, buscar por código, editar e excluir só os não resgatados (RN62 e RN63). <span class="opt">Desejável</span></li>
+        </ul></section>
+      </div>
+      <p class="done"><strong>Entrega 27/11:</strong> a mentoria solicitada pelo mentorado aparece na lista do mentor, e o mentorado vê o perfil dele; pelo menos um teste novo por equipe.</p>
+    </article>
+
+    <article class="sprint" id="sprint-4">
+      <div class="sprint-head"><span class="num">Sprint 4</span><h3>Sessão e avaliação</h3><span class="dates">27/11 → entrega 04/12</span></div>
+      <p class="goal"><strong>Objetivo:</strong> o ciclo completo da mentoria funciona de ponta a ponta entre os três apps.</p>
+      <p class="theme"><b>Aula 2:</b> datas e fuso horário e o ciclo de status da mentoria (<code>pending_match</code> → <code>matched</code> → <code>scheduled</code> → <code>in_progress</code> → <code>completed</code>).</p>
+      <div class="apps">
+        <section class="app mentorado"><h4><i class="dot mentorado"></i>Mentorado</h4><ul>
+          <li>Confirmar ou recusar o horário que o mentor registrou.</li>
+          <li>UC08 Avaliar: estrelas (1 a 5), comentário opcional, ajuda do mentor e meta atingida.</li>
+        </ul></section>
+        <section class="app mentor"><h4><i class="dot mentor"></i>Mentor</h4><ul>
+          <li>UC13 Registrar agendamento: data e hora futuras (RN09), duração, formato e link da reunião.</li>
+          <li>UC14 Feedback da sessão: compareceu ou não compareceu.</li>
+        </ul></section>
+        <section class="app admin"><h4><i class="dot admin"></i>Administrador</h4><ul>
+          <li>UC22 Gerenciar tags: listar por categoria, criar, editar e excluir, com nome único (RN72). <span class="opt">Desejável</span></li>
+        </ul></section>
+      </div>
+      <p class="done"><strong>Entrega 04/12:</strong> o <a href="#roteiro">roteiro de ponta a ponta</a>, executado ao vivo com os três apps.</p>
+    </article>
+
+    <article class="sprint" id="sprint-5">
+      <div class="sprint-head"><span class="num">Sprint 5</span><h3>Acabamento e entrega final</h3><span class="dates">04/12 → entrega 11/12</span></div>
+      <p class="goal"><strong>Objetivo:</strong> completar o que for desejável e deixar os três apps prontos para instalar, sem telas quebradas.</p>
+      <p class="theme"><b>Aula 2:</b> build pelo EAS (APK do perfil <code>preview</code>), checklist de qualidade e preparação da apresentação.</p>
+      <div class="apps">
+        <section class="app plat"><h4>Todas as equipes</h4><ul>
+          <li>Estados de carregamento, vazio e erro em todas as telas.</li>
+          <li>Testes das telas principais e lint sem erros.</li>
+          <li>APK com <code>eas build -p android --profile preview</code> e README do app atualizado.</li>
+        </ul></section>
+        <section class="app mentorado"><h4><i class="dot mentorado"></i>Mentorado</h4><ul>
+          <li>UC07 Pedir troca de mentor, com justificativa de 20 caracteres ou mais (RN38). <span class="opt">Desejável</span></li>
+        </ul></section>
+        <section class="app mentor"><h4><i class="dot mentor"></i>Mentor</h4><ul>
+          <li>UC12 Atualizar o perfil (o backend só aceita perfil aprovado). <span class="opt">Desejável</span></li>
+        </ul></section>
+        <section class="app admin"><h4><i class="dot admin"></i>Administrador</h4><ul>
+          <li>UC21 Dashboard: números de <code>GET /admin/dashboard</code> e contagens feitas no app a partir das listas. <span class="opt">Desejável</span></li>
+        </ul></section>
+      </div>
+      <p class="done"><strong>Entrega final 11/12:</strong> as quatro aulas são de apresentação. Cada equipe mostra o seu app, e a turma executa o roteiro de ponta a ponta com os APKs instalados.</p>
+    </article>
+
+  </div>
+</section>
+
+<section class="block" id="roteiro">
+  <h2>Roteiro de ponta a ponta</h2>
+  <p>É o critério das entregas de 04/12 e 11/12. Use duas contas Google de teste: A (mentor) e B (mentorado).</p>
+  <ol class="script">
+    <li><span class="who admin">Admin</span> gera três vouchers e copia um dos códigos.</li>
+    <li><span class="who mentor">Mentor</span> A cria o perfil com duas áreas. <span class="who admin">Admin</span> aprova o perfil, e A passa a ver a área do mentor.</li>
+    <li><span class="who mentorado">Mentorado</span> B resgata o voucher, solicita uma mentoria nas mesmas duas áreas e vê o perfil de A.</li>
+    <li><span class="who mentor">Mentor</span> A registra o horário da sessão. <span class="who mentorado">Mentorado</span> B vê o mesmo horário e confirma.</li>
+    <li><span class="who mentor">Mentor</span> A informa que a sessão aconteceu. <span class="who mentorado">Mentorado</span> B avalia com 5 estrelas e meta atingida 5, e um voucher de recompensa aparece na lista de vouchers de B.</li>
+    <li><span class="who admin">Admin</span> suspende B, e B não consegue mais entrar.</li>
+  </ol>
+  <p class="note">O matchmaking escolhe entre todos os mentores aprovados no banco. Como o backend é compartilhado, B pode receber o mentor de outra equipe: escolha para o roteiro áreas que só A tenha.</p>
+</section>
+
+<section class="block" id="backlog">
+  <h2>Backlog por app</h2>
+  <p class="note"><span class="chip ready">No starter</span> já vem pronto · <span class="chip ess">Essencial</span> exigido pelo roteiro de ponta a ponta · <span class="chip">Desejável</span> primeiro a cortar · <span class="chip bloq">Bloqueado</span> depende do backend.</p>
+  <div class="cols">
+    <div>
+      <h3><i class="dot mentorado"></i>App do mentorado</h3>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Caso de uso</th><th>Funcionalidade</th><th>Prioridade</th><th>Sprint</th></tr></thead>
+        <tbody>
+          <tr><td class="n">UC01–02</td><td>Login Google, navegação base e tela Conta</td><td><span class="chip ready">No starter</span></td><td class="n">—</td></tr>
+          <tr><td class="n">UC04</td><td>Resgatar voucher e ver os créditos</td><td><span class="chip ess">Essencial</span></td><td class="n">1</td></tr>
+          <tr><td class="n">UC05</td><td>Solicitar mentoria e aguardar o matchmaking</td><td><span class="chip ess">Essencial</span></td><td class="n">2</td></tr>
+          <tr><td class="n">UC09</td><td>Mentorias do usuário com o status</td><td><span class="chip ess">Essencial</span></td><td class="n">3</td></tr>
+          <tr><td class="n">UC06</td><td>Ver o perfil do mentor e abrir o link de agenda</td><td><span class="chip ess">Essencial</span></td><td class="n">3</td></tr>
+          <tr><td class="n">—</td><td>Confirmar ou recusar o horário</td><td><span class="chip ess">Essencial</span></td><td class="n">4</td></tr>
+          <tr><td class="n">UC08</td><td>Avaliar o mentor</td><td><span class="chip ess">Essencial</span></td><td class="n">4</td></tr>
+          <tr><td class="n">UC07</td><td>Pedir troca de mentor</td><td><span class="chip">Desejável</span></td><td class="n">5</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+    <div>
+      <h3><i class="dot mentor"></i>App do mentor</h3>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Caso de uso</th><th>Funcionalidade</th><th>Prioridade</th><th>Sprint</th></tr></thead>
+        <tbody>
+          <tr><td class="n">UC10</td><td>Login Google, navegação base e tela Conta</td><td><span class="chip ready">No starter</span></td><td class="n">—</td></tr>
+          <tr><td class="n">—</td><td>Situação real do perfil e tela de perfil reprovado</td><td><span class="chip ess">Essencial</span></td><td class="n">1</td></tr>
+          <tr><td class="n">UC11</td><td>Criar o perfil</td><td><span class="chip ess">Essencial</span></td><td class="n">2</td></tr>
+          <tr><td class="n">—</td><td>Receber o <code>ROLE_MENTOR</code> depois da aprovação</td><td><span class="chip ess">Essencial</span></td><td class="n">2</td></tr>
+          <tr><td class="n">UC15</td><td>Lista de mentorias por status</td><td><span class="chip ess">Essencial</span></td><td class="n">3</td></tr>
+          <tr><td class="n">UC13</td><td>Registrar o agendamento</td><td><span class="chip ess">Essencial</span></td><td class="n">4</td></tr>
+          <tr><td class="n">UC14</td><td>Feedback da sessão</td><td><span class="chip ess">Essencial</span></td><td class="n">4</td></tr>
+          <tr><td class="n">UC12</td><td>Atualizar o perfil</td><td><span class="chip">Desejável</span></td><td class="n">5</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+    <div>
+      <h3><i class="dot admin"></i>App do administrador</h3>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Caso de uso</th><th>Funcionalidade</th><th>Prioridade</th><th>Sprint</th></tr></thead>
+        <tbody>
+          <tr><td class="n">—</td><td>Login, tela "Acesso restrito" para quem não é administrador e abas</td><td><span class="chip ready">No starter</span></td><td class="n">—</td></tr>
+          <tr><td class="n">UC20</td><td>Suspender ou reativar usuário</td><td><span class="chip ess">Essencial</span></td><td class="n">1</td></tr>
+          <tr><td class="n">UC16</td><td>Aprovar ou reprovar mentor</td><td><span class="chip ess">Essencial</span></td><td class="n">2</td></tr>
+          <tr><td class="n">UC17</td><td>Gerar vouchers</td><td><span class="chip ess">Essencial</span></td><td class="n">2</td></tr>
+          <tr><td class="n">UC18</td><td>Gerenciar vouchers</td><td><span class="chip">Desejável</span></td><td class="n">3</td></tr>
+          <tr><td class="n">UC22</td><td>Gerenciar tags</td><td><span class="chip">Desejável</span></td><td class="n">4</td></tr>
+          <tr><td class="n">UC21</td><td>Dashboard</td><td><span class="chip">Desejável</span></td><td class="n">5</td></tr>
+          <tr><td class="n">UC19</td><td>Aprovar ou reprovar troca de mentor</td><td><span class="chip bloq">Bloqueado</span> o endpoint é um stub</td><td class="n">—</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="api">
+  <h2>Contratos da API</h2>
+  <p>Todas as chamadas passam pelo gateway, com o prefixo <code>/api/v1</code>. O <code>api</code> do starter já acrescenta esse prefixo e o header <code>Authorization: Bearer &lt;accessToken&gt;</code>. Os erros chegam como <code>{"status", "error", "message"}</code>, e o campo <code>error</code> traz um código estável para escolher a mensagem. A mesma referência, com os códigos de erro, está no <code>docs/API.md</code> de cada repositório.</p>
+  <div class="cols">
+    <div>
+      <h3><i class="dot plat"></i>Login e sessão (prontos no starter)</h3>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Para quê</th><th>Chamada</th><th>Observação</th></tr></thead>
+        <tbody>
+          <tr><td>Entrar</td><td class="mono">POST /auth/login {"idToken"}</td><td>Feito pelo <code>login()</code> do <code>useAuth</code></td></tr>
+          <tr><td>Renovar</td><td class="mono">POST /auth/refresh {"refreshToken"}</td><td>Automático quando a API responde 401</td></tr>
+          <tr><td>Usuário logado</td><td class="mono">GET /users/me</td><td>Vira o <code>user</code> do <code>useAuth</code>: <code>id</code>, <code>name</code>, <code>email</code>, <code>picture</code>, <code>role</code>, <code>status</code></td></tr>
+        </tbody>
+      </table></div>
+    </div>
+    <div>
+      <h3><i class="dot mentorado"></i>App do mentorado</h3>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Para quê</th><th>Chamada</th><th>Observação</th></tr></thead>
+        <tbody>
+          <tr><td>Resgatar voucher</td><td class="mono">POST /admin/vouchers/redeem {"code"}</td><td>Erro <code>invalid_or_expired_voucher</code></td></tr>
+          <tr><td>Meus vouchers</td><td class="mono">GET /admin/vouchers/mine</td><td>Crédito = voucher <code>redeemed</code></td></tr>
+          <tr><td>Tags</td><td class="mono">GET /tags</td><td>Público; <code>name</code>, <code>category</code>, <code>description</code></td></tr>
+          <tr><td>Solicitar mentoria</td><td class="mono">POST /mentorships {"preferences": {"expertise": [nomes das tags], "availableTimes": [], "preferredLanguage", "sessionFormat"}}</td><td>Erros <code>voucher_required</code> e <code>voucher_not_available</code>; volta <code>matched</code> ou <code>pending_match</code></td></tr>
+          <tr><td>Minhas mentorias</td><td class="mono">GET /mentorships/mentee</td><td>Cada uma traz <code>status</code>, <code>mentorId</code> e <code>scheduledSession</code></td></tr>
+          <tr><td>Perfil do mentor</td><td class="mono">GET /profiles/mentor/{mentorId}</td><td><code>miniBio</code>, <code>areas</code>, <code>schedulingLink</code></td></tr>
+          <tr><td>Confirmar horário</td><td class="mono">POST /mentorships/{id}/schedule/confirm {"confirmed": true}</td><td><code>false</code> recusa e volta a <code>matched</code></td></tr>
+          <tr><td>Avaliar</td><td class="mono">POST /mentorships/{id}/feedback/mentee {"rating", "feedback", "mentorHelpfulness", "goalAchievement"}</td><td>Só em <code>in_progress</code>, uma vez; leva a <code>completed</code></td></tr>
+          <tr><td>Pedir troca</td><td class="mono">POST /mentorships/{id}/request-change {"changeType": "mentor_change", "reason"}</td><td>Leva a <code>change_requested</code></td></tr>
+        </tbody>
+      </table></div>
+    </div>
+    <div>
+      <h3><i class="dot mentor"></i>App do mentor</h3>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Para quê</th><th>Chamada</th><th>Observação</th></tr></thead>
+        <tbody>
+          <tr><td>Meu perfil</td><td class="mono">GET /profiles/mentor/{id do usuário}</td><td>404 = ainda sem perfil; <code>status</code> <code>PENDING</code>, <code>APPROVED</code> ou <code>REJECTED</code></td></tr>
+          <tr><td>Criar perfil</td><td class="mono">POST /profiles/mentor {"miniBio", "areas": [nomes das tags], "schedulingLink"}</td><td>Exige <code>ROLE_MENTEE</code>; nasce <code>PENDING</code></td></tr>
+          <tr><td>Atualizar perfil</td><td class="mono">PUT /profiles/mentor (mesmo corpo)</td><td>Exige <code>ROLE_MENTOR</code></td></tr>
+          <tr><td>Minhas mentorias</td><td class="mono">GET /mentorships/mentor</td><td></td></tr>
+          <tr><td>Registrar horário</td><td class="mono">PUT /mentorships/{id}/schedule {"scheduledAt", "duration", "format", "meetingLink", "location", "timezone"}</td><td>Exige <code>ROLE_MENTOR</code>; leva a <code>scheduled</code></td></tr>
+          <tr><td>Feedback da sessão</td><td class="mono">POST /mentorships/{id}/feedback/mentor {"sessionCompleted": true}</td><td><code>true</code> leva a <code>in_progress</code>; <code>false</code> mantém <code>scheduled</code></td></tr>
+        </tbody>
+      </table></div>
+    </div>
+    <div>
+      <h3><i class="dot admin"></i>App do administrador</h3>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Para quê</th><th>Chamada</th><th>Observação</th></tr></thead>
+        <tbody>
+          <tr><td>Usuários</td><td class="mono">GET /users · PUT /users/{id}/status {"status": "SUSPENDED"}</td><td><code>ACTIVE</code> reativa</td></tr>
+          <tr><td>Mentores pendentes</td><td class="mono">GET /profiles/mentors/pending</td><td>Perfis com <code>mentorId</code> (id do usuário)</td></tr>
+          <tr><td>Aprovar mentor</td><td class="mono">POST /admin/mentors/{mentorId}/approve</td><td>Muda o perfil para <code>APPROVED</code> e adiciona <code>ROLE_MENTOR</code></td></tr>
+          <tr><td>Reprovar mentor</td><td class="mono">PUT /profiles/mentor/{mentorId}/status {"status": "REJECTED"}</td><td></td></tr>
+          <tr><td>Gerar vouchers</td><td class="mono">POST /admin/vouchers/generate {"count", "value", "expirationMonths"}</td><td>Devolve <code>{"count", "vouchers": [...]}</code> com os códigos</td></tr>
+          <tr><td>Criar um voucher</td><td class="mono">POST /admin/vouchers {"value", "expirationMonths"}</td><td>Código automático <code>MNT-XXXXXXXX</code> se omitido</td></tr>
+          <tr><td>Listar e buscar vouchers</td><td class="mono">GET /admin/vouchers?status=active · GET /admin/vouchers/code/{code}</td><td></td></tr>
+          <tr><td>Editar ou excluir voucher</td><td class="mono">PUT · DELETE /admin/vouchers/{id}</td><td>O backend não bloqueia voucher resgatado: o app bloqueia</td></tr>
+          <tr><td>Tags</td><td class="mono">POST /tags {"name", "category", "description"} · PUT · DELETE /tags/{tagId}</td><td></td></tr>
+          <tr><td>Dashboard</td><td class="mono">GET /admin/dashboard</td><td>Métricas imprecisas</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="armadilhas">
+  <h2>Armadilhas da API</h2>
+  <p>Comportamentos do backend que costumam travar quem escreve as telas.</p>
+  <ul class="traps">
+    <li><b>Papel novo só no próximo token.</b> Depois da aprovação, o mentor só recebe o <code>ROLE_MENTOR</code> ao refazer o <code>POST /auth/login</code>. Até lá, agendar e dar feedback respondem 403.</li>
+    <li><b>403 é falta de papel, não sessão vencida.</b> A sessão vencida responde 401, e o <code>api</code> do starter a renova sozinho. Um 403 indica que a conta não tem o papel exigido.</li>
+    <li><b>Horário sem fuso.</b> O backend guarda <code>scheduledAt</code> sem fuso. Envie o horário local, como <code>2026-12-01T14:00:00</code>; com <code>toISOString()</code>, que converte para UTC, a sessão aparece 3 h deslocada.</li>
+    <li><b>A confirmação não muda o status.</b> Ela fica em <code>scheduledSession.confirmationStatus</code> (<code>pending</code>, <code>confirmed</code> ou <code>rejected</code>). Não existe status <code>confirmed</code>.</li>
+    <li><b>Tags pelo nome.</b> <code>preferences.expertise</code> e <code>areas</code> levam o nome da tag, e o matchmaking compara esses nomes.</li>
+    <li><b>A descrição da necessidade é descartada.</b> <code>preferences</code> não tem campo para texto livre, e um campo a mais é ignorado sem erro.</li>
+    <li><b>Voucher de recompensa.</b> Só é criado com <code>rating</code> e <code>goalAchievement</code> iguais ou maiores que 4. Ele chega <code>active</code>, e o mentorado ainda precisa resgatá-lo pelo código.</li>
+    <li><b>Na aprovação, use o <code>mentorId</code>.</b> É o id do usuário. O <code>id</code> do perfil é outro valor e faz a aprovação falhar.</li>
+    <li><b>Endpoints que não fazem nada.</b> <code>/admin/users</code>, <code>/admin/users/{id}/suspend</code>, <code>/admin/mentors/pending</code>, <code>/admin/mentorships/change-requests</code> e <code>/admin/tags</code> respondem "Delegated to …". A rota <code>/vouchers/**</code> do gateway não tem endpoint.</li>
+    <li><b>O mentor não tem nome no perfil.</b> O perfil guarda minibio, áreas e link, sem nome nem foto, e o mentorado não pode consultar o usuário do mentor.</li>
+  </ul>
+</section>
+
+<section class="block" id="regras">
+  <h2>Regras de entrega</h2>
+  <ul class="plain">
+    <li>Uma branch e um pull request por issue, a partir de <code>develop</code>, no formato <code>feature/&lt;issue&gt;-&lt;descrição&gt;</code>, com commits no padrão Conventional Commits (escopos <code>mentorado-app</code>, <code>mentor-app</code>, <code>admin-app</code> e <code>auth</code>).</li>
+    <li>Cada PR é revisado por outra pessoa da equipe e só entra com o CI verde (lint e testes).</li>
+    <li>Uma mudança em <code>packages/auth</code> é combinada com o professor antes, porque a mesma cópia existe nos outros dois repositórios.</li>
+    <li>A demo roda contra o backend de integração, a partir da tag da sprint, e não de uma branch local.</li>
+    <li>O <code>.env</code> não vai para o Git; o <code>.env.example</code> lista as variáveis.</li>
+  </ul>
+</section>
+
+<section class="block" id="fora">
+  <h2>Fora do escopo</h2>
+  <p>Todos os itens abaixo dependem de mudanças no backend. Quando uma tela esbarrar em um deles, ela mostra a limitação, e a equipe não espera pela correção.</p>
+  <ul class="plain">
+    <li>Aprovar ou reprovar troca de mentor (UC19 e RF18): o endpoint do admin-service é um stub.</li>
+    <li>Guardar o texto em que o mentorado descreve a necessidade.</li>
+    <li>Nome e foto do mentor no app do mentorado.</li>
+    <li>Reenviar um perfil reprovado (RN18).</li>
+    <li>Notificações push (RF13) e deep links.</li>
+    <li>Vouchers restritos por tag (RF14 e RN21).</li>
+    <li>Métricas do dashboard em tempo real (RN23 e RN24).</li>
+    <li>Versão para iOS.</li>
+  </ul>
+</section>
+
+<section class="block" id="riscos">
+  <h2>Riscos</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Risco</th><th>Efeito</th><th>O que fazer</th></tr></thead>
+    <tbody>
+      <tr><td>Ambiente Android incompleto nas máquinas (JDK 17, Android Studio, emulador)</td><td>Parte da turma não roda o app na primeira semana.</td><td>Preparar o ambiente nas aulas 3 e 4 de 06/11; usar um celular por USB quando o emulador não rodar.</td></tr>
+      <tr><td>Três apps em cinco semanas</td><td>As últimas sprints acumulam atraso.</td><td>Cortar primeiro o que é desejável; o roteiro de ponta a ponta só usa itens essenciais.</td></tr>
+      <tr><td>Sem aula presencial em 20/11</td><td>A sprint 3 só tem as 3 h de EAD.</td><td>Escopo menor na sprint 3; demo da entrega 2 em 27/11.</td></tr>
+      <tr><td>App do administrador sem registro no Firebase</td><td>O login Google falha nesse app.</td><td>Registrar o pacote até 10/11; até lá, a equipe monta as telas da sprint 1.</td></tr>
+      <tr><td>SHA-1 do EAS não cadastrado</td><td>O login falha no APK instalado, mesmo funcionando no emulador.</td><td>Cadastrar o SHA-1 de <code>eas credentials</code> de cada app até 04/12.</td></tr>
+      <tr><td>Primeiro build Android demorado</td><td>As aulas de 06/11 podem acabar antes do primeiro app abrir.</td><td>Começar o build no início da aula 3 e terminar no EAD.</td></tr>
+      <tr><td>Backend compartilhado</td><td>Os dados das equipes se misturam, e o matchmaking pode atribuir o mentor de outra equipe.</td><td>Contas de teste por equipe e áreas diferentes em cada equipe nos testes do matchmaking.</td></tr>
+      <tr><td>Backend do Heroku fora do ar</td><td>Nenhuma equipe consegue testar, porque os alunos não têm o backend local.</td><td>O professor acompanha os health checks (<code>/actuator/health</code> no gateway) e reinicia os dynos quando preciso.</td></tr>
+      <tr><td>Cópias do pacote de login divergem</td><td>Uma correção no login fica só num dos apps.</td><td>Mudanças no pacote passam pelo professor, que aplica a mesma alteração nos três repositórios.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<footer>
+  <p>© 2026 Projeto da Curriculçarização da Extensão do Curso Superior de Tecnologia em Sistemas para Internet do Instituto Federal do Triângulo Mineiro
+</footer>
+
+</div>
+</body>
+</html>
