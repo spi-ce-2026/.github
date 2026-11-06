@@ -1151,8 +1151,7 @@ eas submit -p android --profile production   # usa ./play-service-account.json (
 
 - **`JWT_SECRET`:** um valor antigo ficou publicado no histórico do git. Gere um novo e configure em todos os apps do Heroku.
 - **Senha do MongoDB Atlas:** apareceu em texto puro em versões antigas da documentação (`docs/infra`). Esses arquivos foram removidos, mas a senha continua no histórico do git: troque a senha do usuário no Atlas.
-- **Chaves do Firebase:** a chave web e o `google-services.json` são configuração de cliente, públicos por natureza. Restrinja a API key no Google Cloud Console (por app e domínio). Já a conta de serviço (`FIREBASE_CREDENTIALS_JSON`) é secreta.
-- **Conta de serviço versionada:** o arquivo `mentorias-uberhub-firebase-adminsdk-fbsvc-….json` está na raiz deste repositório (privado). Remova-o do git, gere uma chave nova no Firebase e apague a antiga; o histórico do git continua com a chave antiga.
+- **Chaves do Firebase:** o `google-services.json` contém configuração de cliente, públicos por natureza. Restrinja a API key no Google Cloud Console (por app e domínio). Já a conta de serviço (`FIREBASE_CREDENTIALS_JSON`) é secreta.
 - **Repositórios dos apps:** são públicos. Neles podem ficar o `google-services.json` e o `.env.example` (configuração de cliente), nunca o `.env` nem segredos do backend.
 - **Onde guardar segredos:** em variáveis do Heroku, secrets do GitHub ou variáveis do EAS, nunca em arquivos do repositório.
 
