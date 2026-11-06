@@ -1,9 +1,6 @@
 # UberHub Mentorias — Documentação do Projeto
 
-> **Atualizado em:** 06/11/2026 · **Base:** branch `starter/apps-mobile`, que tem o backend da `main` (commit `2e728f9`) e o starter dos três apps mobile
-> **Substitui** os documentos antigos de `docs/`. Os que tinham conteúdo ainda útil como material de aula estão em [`docs/aulas/`](aulas/README.md); o destino de cada arquivo está no [Apêndice A](#apêndice-a--reorganização-da-documentação).
-
-O UberHub Mentorias conecta mentorados a mentores por meio de vouchers e matchmaking por tags. O sistema tem 6 serviços Spring Boot atrás de um API Gateway e três apps React Native: o do mentorado, o do mentor e o do administrador. O login é feito com Google via Firebase, e o backend emite o próprio JWT.
+O UberHub Mentorias conecta mentorados a mentores por meio de vouchers e matchmaking por tags. O sistema tem 6 serviços Spring Boot atrás de um API Gateway e três apps React Native: o do mentorado, o do mentor e o do administrador. O backend fica neste repositório; cada app tem o próprio repositório na organização `spi-ce-2026` ([seção 3](#repositórios)). O login é feito com Google via Firebase, e o backend emite o próprio JWT.
 
 Este documento descreve o sistema **como ele está implementado hoje**. O backend está completo. Os apps são um *starter*: o login e a navegação base estão prontos, e as telas de cada funcionalidade são implementadas pelas equipes ([seção 9](#9-apps-mobile)). Onde a especificação original diverge do código, a divergência está indicada. Em caso de conflito, a ordem de precedência é: **código > este documento > documentos antigos**.
 
@@ -26,9 +23,8 @@ Este documento descreve o sistema **como ele está implementado hoje**. O backen
 15. [Processo de trabalho](#15-processo-de-trabalho)
 16. [Limitações conhecidas e próximos passos](#16-limitações-conhecidas-e-próximos-passos)
 17. [Glossário](#17-glossário)
-- [Apêndice A — Reorganização da documentação](#apêndice-a--reorganização-da-documentação)
 
----
+- [Apêndice A — Reorganização da documentação](#apêndice-a--reorganização-da-documentação)
 
 ## 1. Visão geral do produto
 
@@ -47,9 +43,9 @@ Este documento descreve o sistema **como ele está implementado hoje**. O backen
 
 | Ator | Cliente | O que faz | Papel no sistema |
 |---|---|---|---|
-| Mentorado | `mobile/mentoradoApp` | Resgata voucher, solicita mentoria, vê o mentor, confirma horário, avalia | `ROLE_MENTEE` |
-| Mentor | `mobile/mentorApp` | Cria perfil, aguarda aprovação, registra agendamento, dá feedback da sessão | `ROLE_MENTEE` + `ROLE_MENTOR` (após aprovação) |
-| Administrador | `mobile/adminApp` | Aprova mentores, gerencia vouchers e usuários, vê métricas | `ROLE_ADMIN` |
+| Mentorado | [`spi-ce-2026/mentorado`](https://github.com/spi-ce-2026/mentorado) | Resgata voucher, solicita mentoria, vê o mentor, confirma horário, avalia | `ROLE_MENTEE` |
+| Mentor | [`spi-ce-2026/mentor`](https://github.com/spi-ce-2026/mentor) | Cria perfil, aguarda aprovação, registra agendamento, dá feedback da sessão | `ROLE_MENTEE` + `ROLE_MENTOR` (após aprovação) |
+| Administrador | [`spi-ce-2026/administrador`](https://github.com/spi-ce-2026/administrador) | Aprova mentores, gerencia vouchers e usuários, vê métricas | `ROLE_ADMIN` |
 
 ### Fora do escopo
 
@@ -67,8 +63,6 @@ O quadro abaixo vale para o **backend**. Nos apps, só o login e a navegação b
 | Solicitação de mentoria com matchmaking | | Recuperação de senha (n/a com login Google) |
 | Agendamento, feedback do mentor, avaliação | | Vouchers restritos por tag |
 | Gestão de tags (API no profile-service) | | |
-
----
 
 ## 2. Jornadas e fluxo de ponta a ponta
 
@@ -119,8 +113,6 @@ flowchart LR
 1. Entra no app com uma conta que tenha `ROLE_ADMIN`; as demais contas veem a tela "Acesso restrito".
 2. Aprova ou reprova mentores pendentes, gera e gerencia vouchers, ativa ou suspende usuários e acompanha o dashboard.
 
----
-
 ## 3. Arquitetura
 
 ```mermaid
@@ -161,6 +153,16 @@ flowchart TB
     AD --- D4
     MM --- D5
 ```
+
+### Repositórios
+
+| Repositório | Conteúdo | Quem trabalha nele |
+|---|---|---|
+| [`spi-ce-2026/mentorado`](https://github.com/spi-ce-2026/mentorado) | App do mentorado (pacote Android `com.professorangoti.mentoradoapp`) | Equipe do mentorado |
+| [`spi-ce-2026/mentor`](https://github.com/spi-ce-2026/mentor) | App do mentor (`com.professorangoti.mentorapp`) | Equipe do mentor |
+| [`spi-ce-2026/administrador`](https://github.com/spi-ce-2026/administrador) | App do administrador (`com.professorangoti.adminApp`) | Equipe do administrador |
+
+Os repositórios dos apps são públicos e não têm o código do backend; os alunos usam o backend publicado no Heroku. Cada um tem uma cópia do pacote de login `@mentorias/auth` ([seção 9](#9-apps-mobile)) e as branches `main` e `develop`. A pasta `mobile/` deste repositório guarda a versão do starter da qual os três foram gerados; o desenvolvimento acontece nos repositórios da organização.
 
 ### Serviços
 
@@ -239,9 +241,8 @@ Os controllers usam apenas a camada `service/`. Desde a correção 4.1, a lógic
 | MongoDB | Esquema flexível para iterar rápido | Índices e unicidade precisam ser criados à mão |
 | Firebase Auth + JWT próprio | Google Sign-In com pouco código; papéis controlados pelo backend | Três tokens no fluxo (Google, Firebase, JWT) |
 | Expo / React Native, também para o administrador | Três apps com a mesma base e o mesmo login (pacote `@mentorias/auth`) | Google Sign-In exige *development build* (não roda no Expo Go) |
+| Um repositório por app, com uma cópia do pacote de login | Cada equipe trabalha no seu repositório, sem depender das outras nem de um registro de pacotes | Uma correção no login precisa ser aplicada nos três repositórios |
 | Heroku para produção | Suporte a Docker e baixo custo | Um app (dyno) por serviço; os workflows de Railway no repositório não são usados |
-
----
 
 ## 4. Autenticação e autorização
 
@@ -303,8 +304,6 @@ A especificação pedia 15 min / 7 dias (RN25/RN26). O código usa 1 h / 24 h.
 - Sem autenticação válida (token ausente, inválido, expirado ou refresh token): **401**, com corpo vazio. É nesse status que o cliente HTTP do `@mentorias/auth` tenta o refresh e renova a sessão.
 - Autenticado, mas sem o papel exigido: **403**. A negação de `@PreAuthorize` também resulta em 403 (correção 4.1).
 - O dono do recurso é verificado no service: a mentoria só é visível para mentorado e mentor dela, e o voucher só para o próprio mentorado. Recurso de outra pessoa responde **404**, não 403, para não revelar que existe.
-
----
 
 ## 5. Serviços do backend
 
@@ -453,12 +452,6 @@ Todos os endpoints `/admin/**` exigem **ADMIN**, exceto onde indicado.
 | POST | `/analytics/record-event`, `/notifications/send` | Públicos, sem rota no gateway; só gravam no banco |
 | GET | `/admin/health` | Público |
 
-### 5.6 api-gateway (8080)
-
-O gateway faz roteamento (ver [seção 3](#rotas-do-gateway)) e CORS: origens de `CORS_ALLOWED_ORIGINS` ou, por padrão, `https://angoti.github.io` (do antigo painel web), `localhost:3000/3001` e `10.0.2.2`. O CORS só afeta clientes web; os apps nativos não passam por ele. Também propaga o header `X-Correlation-Id` (gera um quando ausente) e padroniza erros em JSON. Os timeouts para os serviços são de 45 s (conexão) e 60 s (resposta).
-
----
-
 ## 6. Ciclos de vida (status)
 
 ### Mentoria
@@ -517,8 +510,6 @@ stateDiagram-v2
 ### Perfil de mentor
 
 `PENDING` → `APPROVED` (admin aprova pelo admin-service, que também adiciona `ROLE_MENTOR`) ou `REJECTED` (admin reprova pelo profile-service). Um perfil reprovado não tem caminho de volta: o mentor não consegue editá-lo nem criar outro (RN18 não implementada).
-
----
 
 ## 7. Fluxos detalhados
 
@@ -603,8 +594,6 @@ sequenceDiagram
 ```
 
 Com `sessionCompleted: false` (mentorado faltou), o feedback é gravado e a mentoria continua `scheduled`. A suspensão por faltas (RN15) é manual, pelo app do administrador.
-
----
 
 ## 8. Requisitos e regras de negócio
 
@@ -725,43 +714,35 @@ Fonte: `docs/projeto/Especificação-de-Requisitos-UberHub-Mentorias.md` (22 cas
 | RNF13 — Ferramentas gratuitas | Parcial (Heroku é pago; Atlas no plano gratuito) |
 | RNF14 — Logging | OK (níveis configuráveis, correlation ID no gateway) |
 
----
-
 ## 9. Apps mobile
 
-Os três apps ficam em `mobile/`, organizados como npm workspace, com um único `package-lock.json`. Eles são entregues como *starter*: o login, a sessão, o cliente HTTP e a navegação base estão prontos, e as telas de cada funcionalidade são o backlog das equipes. A instalação e o uso no dia a dia estão em [`mobile/README.md`](../mobile/README.md) e na [seção 10](#apps-mobile).
+Cada app tem o próprio repositório na organização `spi-ce-2026`: [`mentorado`](https://github.com/spi-ce-2026/mentorado), [`mentor`](https://github.com/spi-ce-2026/mentor) e [`administrador`](https://github.com/spi-ce-2026/administrador). Os três foram publicados como *starter*: o login, a sessão, o cliente HTTP e a navegação base estão prontos, e as telas de cada funcionalidade são o backlog das equipes. O `README.md` de cada repositório explica a instalação e o uso, e o `docs/API.md` lista os endpoints daquele app.
 
-### 9.1 Estrutura
-
-```
-mobile/
-├── package.json        workspaces: packages/*, mentoradoApp, mentorApp, adminApp
-├── package-lock.json   único lockfile
-├── packages/auth/      pacote @mentorias/auth (login, sessão, cliente HTTP)
-├── mentoradoApp/       pacote Android com.professorangoti.mentoradoapp
-├── mentorApp/          pacote Android com.professorangoti.mentorapp
-└── adminApp/           pacote Android com.professorangoti.adminApp
-```
-
-Cada app segue a mesma organização:
+### 9.1 Estrutura de cada repositório
 
 ```
-App.js              PaperProvider → AuthProvider → NavigationContainer → RootNavigator
-app.config.js       lê o .env; EXPO_PUBLIC_API_BASE_URL vira expo.extra.API_BASE_URL
-src/
-├── components/     LoadingSpinner, EmptyState, ErrorDisplay
-├── navigation/     RootNavigator: o que aparece com e sem login
-├── screens/        telas
-├── services/api.js serviços de domínio, sobre o api do pacote
-├── theme.js        cor do app e nome exibido no login
-└── __tests__/      testes (Jest + React Native Testing Library)
+.
+├── package.json        o app, com "workspaces": ["packages/*"]
+├── package-lock.json   único lockfile (app + pacote)
+├── App.js              PaperProvider → AuthProvider → NavigationContainer → RootNavigator
+├── app.config.js       lê o .env; EXPO_PUBLIC_API_BASE_URL vira expo.extra.API_BASE_URL
+├── src/
+│   ├── components/     LoadingSpinner, EmptyState, ErrorDisplay
+│   ├── navigation/     RootNavigator: o que aparece com e sem login
+│   ├── screens/        telas
+│   ├── services/api.js serviços de domínio, sobre o api do pacote
+│   ├── theme.js        cor do app e nome exibido no login
+│   └── __tests__/      testes (Jest + React Native Testing Library)
+├── packages/auth/      cópia do pacote @mentorias/auth (login, sessão, cliente HTTP)
+├── docs/               API.md (endpoints do app) e projeto/ (especificação e mockups)
+└── .github/            CI (ci.yml) e templates de issue e pull request
 ```
 
-Sem `EXPO_PUBLIC_API_BASE_URL`, os apps apontam para o gateway de produção.
+Sem `EXPO_PUBLIC_API_BASE_URL`, os apps apontam para o gateway de produção no Heroku.
 
 ### 9.2 Pacote `@mentorias/auth`
 
-Os apps importam dele: `import { useAuth, api, log } from "@mentorias/auth"`. Uma mudança no pacote afeta os três apps, por isso o pull request precisa da revisão de uma pessoa de cada equipe.
+Os apps importam dele: `import { useAuth, api, log } from "@mentorias/auth"`. Cada repositório tem uma cópia do pacote em `packages/auth`, ligada ao app pelo npm workspace. Por isso uma mudança no pacote é combinada com o professor, que aplica a mesma alteração nos outros dois repositórios.
 
 | Arquivo do pacote | Exporta | Função |
 |---|---|---|
@@ -784,11 +765,11 @@ Depois que o administrador aprova um mentor, o token dele só traz o `ROLE_MENTO
 
 ### 9.3 Os três apps
 
-| App | Navegação no starter | Pronto | A implementar |
+| App (repositório) | Navegação no starter | Pronto | A implementar |
 |---|---|---|---|
-| `mentoradoApp` | Login; abas Início e Conta | Login, tela Conta | UC04 resgatar voucher, UC05 solicitar mentoria, UC06 ver o mentor, UC07 pedir troca, UC08 avaliar, UC09 histórico, confirmar ou recusar o horário |
-| `mentorApp` | Login; depois, conforme a situação do perfil: cadastro (sem perfil), espera pela aprovação (`PENDING` ou `REJECTED`) ou abas Mentorias e Conta (`APPROVED`) | Login, tela Conta, navegação pela situação do perfil | O *hook* `useMentorProfile` (hoje devolve um valor fixo; deve ler `GET /profiles/mentor/{user.id}`, em que 404 é "sem perfil"), UC10 e UC11 criar perfil, UC12 atualizar, UC13 agendamento, UC14 feedback, UC15 lista de mentorias |
-| `adminApp` | Login; tela "Acesso restrito" para quem não tem `ADMIN` (`src/utils/roles.js`); abas Início, Mentores, Vouchers, Usuários e Conta | Login, bloqueio por papel, tela Conta | UC16 aprovar ou reprovar mentor, UC17 gerar vouchers, UC18 gerenciar vouchers, UC20 suspender ou reativar usuário, UC21 dashboard, UC22 tags |
+| Mentorado ([`mentorado`](https://github.com/spi-ce-2026/mentorado)) | Login; abas Início e Conta | Login, tela Conta | UC04 resgatar voucher, UC05 solicitar mentoria, UC06 ver o mentor, UC07 pedir troca, UC08 avaliar, UC09 histórico, confirmar ou recusar o horário |
+| Mentor ([`mentor`](https://github.com/spi-ce-2026/mentor)) | Login; depois, conforme a situação do perfil: cadastro (sem perfil), espera pela aprovação (`PENDING` ou `REJECTED`) ou abas Mentorias e Conta (`APPROVED`) | Login, tela Conta, navegação pela situação do perfil | O *hook* `useMentorProfile` (hoje devolve um valor fixo; deve ler `GET /profiles/mentor/{user.id}`, em que 404 é "sem perfil"), UC10 e UC11 criar perfil, UC12 atualizar, UC13 agendamento, UC14 feedback, UC15 lista de mentorias |
+| Administrador ([`administrador`](https://github.com/spi-ce-2026/administrador)) | Login; tela "Acesso restrito" para quem não tem `ADMIN` (`src/utils/roles.js`); abas Início, Mentores, Vouchers, Usuários e Conta | Login, bloqueio por papel, tela Conta | UC16 aprovar ou reprovar mentor, UC17 gerar vouchers, UC18 gerenciar vouchers, UC20 suspender ou reativar usuário, UC21 dashboard, UC22 tags |
 
 Para usuários, mentores pendentes e tags, o app do administrador chama outros serviços, porque os endpoints `/admin/...` equivalentes são stubs ([seção 5.5](#55-admin-service-8085)):
 
@@ -803,8 +784,6 @@ Para usuários, mentores pendentes e tags, o app do administrador chama outros s
 Nas chamadas de aprovação e reprovação, `{mentorId}` é o campo `mentorId` do perfil (o id do usuário), não o `id` do documento.
 
 Notificações push e deep links (`mentorias://...`), descritos em documentos antigos, **não estão implementados**. O esquema `mentorias` só está declarado no `app.config.js`.
-
----
 
 ## 10. Ambiente de desenvolvimento
 
@@ -837,14 +816,14 @@ Notificações push e deep links (`mentorias://...`), descritos em documentos an
 | `EXPO_PUBLIC_FIREBASE_*` (6), `EXPO_PUBLIC_GOOGLE_CLIENT_ID` | apps | Sim | `.env` de cada app (ver `.env.example`) |
 | `EXPO_PUBLIC_API_BASE_URL` | apps | Não | URL do gateway com `/api/v1`; sem ela, o app usa o gateway de produção |
 
-Os modelos estão em `.env.example` (raiz) e `mobile/*/.env.example`. Os arquivos `.env` nunca vão para o git.
+Os modelos estão no `.env.example` da raiz deste repositório (backend) e no `.env.example` da raiz de cada repositório de app. Os arquivos `.env` nunca vão para o git.
 
 ### Firebase (configuração única do projeto)
 
 1. **Authentication → Sign-in method:** habilite o provedor **Google**.
 2. **Configurações do projeto → Seus apps:**
    - App **Web**: os valores do `firebaseConfig` viram as variáveis `EXPO_PUBLIC_FIREBASE_*` dos apps, que usam o SDK JavaScript do Firebase.
-   - Apps **Android**: `com.professorangoti.mentoradoapp`, `com.professorangoti.mentorapp` e `com.professorangoti.adminApp`, cada um com o **SHA-1** do certificado que assina o build. O *development build* usa o `android/app/debug.keystore` que o `expo prebuild` gera, igual em todas as máquinas (SHA-1 `5E:8F:16:06:…`; confira com `cd android && ./gradlew signingReport`). O APK do EAS usa outro certificado, que aparece em `eas credentials`. Baixe o `google-services.json` de novo depois de incluir um app ou um SHA-1; o mesmo arquivo serve para os três apps.
+   - Apps **Android**: `com.professorangoti.mentoradoapp`, `com.professorangoti.mentorapp` e `com.professorangoti.adminApp`, cada um com o **SHA-1** do certificado que assina o build. O *development build* usa o `android/app/debug.keystore` que o `expo prebuild` gera, igual em todas as máquinas (SHA-1 `5E:8F:16:06:…`; confira com `cd android && ./gradlew signingReport`). O APK do EAS usa outro certificado, que aparece em `eas credentials`. Baixe o `google-services.json` de novo depois de incluir um app ou um SHA-1; o mesmo arquivo serve para os três apps e vai para a raiz de cada repositório de app.
 3. **Web Client ID** (OAuth, tipo Web, criado pelo Firebase no Google Cloud): vai em `EXPO_PUBLIC_GOOGLE_CLIENT_ID`.
 4. **Contas de serviço → Gerar nova chave:** converta o JSON para uma linha e use como `FIREBASE_CREDENTIALS_JSON`. Esse arquivo é credencial: nunca vai para o repositório.
 
@@ -978,19 +957,21 @@ Faça login de novo para receber um token com `ROLE_ADMIN`.
 
 ### Apps mobile
 
+Cada app é clonado do seu repositório ([seção 3](#repositórios)):
+
 ```bash
-cd mobile
-npm ci                      # instala os três apps e o pacote @mentorias/auth (npm workspaces)
-npm run lint && npm test    # lint e testes de todos os workspaces
-cd mentoradoApp             # ou mentorApp, adminApp
+git clone https://github.com/spi-ce-2026/mentorado.git   # ou mentor, administrador
+cd mentorado
+npm ci                      # instala o app e o pacote @mentorias/auth (npm workspace)
+npm run lint && npm test    # lint e testes do app
+npm test -w @mentorias/auth # testes do pacote
 cp .env.example .env        # preencha EXPO_PUBLIC_*
 npx expo prebuild -p android --clean
 npx expo run:android        # development build; o Expo Go não suporta o Google Sign-In nativo
 ```
 
-- **Instalação:** sempre a partir de `mobile/`. Há um único `package-lock.json`, em `mobile/`, e as dependências ficam em `mobile/node_modules`. Um `node_modules` dentro de um app (de uma instalação feita fora do workspace) faz o React carregar duas vezes: apague-o.
-- **App do administrador:** precisa do `google-services.json` com o pacote `com.professorangoti.adminApp`, baixado do Firebase depois do registro do app ([Firebase](#firebase-configuração-única-do-projeto)).
-- **Mais detalhes:** [`mobile/README.md`](../mobile/README.md) explica o uso do `useAuth`, do `api` e a estrutura de cada app.
+- **Instalação:** sempre na raiz do repositório. Há um único `package-lock.json`, na raiz, e as dependências ficam no `node_modules` da raiz. Um `node_modules` dentro de `packages/auth` (de uma instalação feita na pasta do pacote) faz o React carregar duas vezes: apague-o.
+- **Mais detalhes:** o `README.md` de cada repositório explica o uso do `useAuth` e do `api`, e o `docs/API.md` lista os endpoints daquele app.
 - **Backend local:** `EXPO_PUBLIC_API_BASE_URL=http://10.0.2.2:8080/api/v1` no `.env` do app (lida pelo `app.config.js`).
 - **Emulador:** `scripts/create-android-avd.ps1` cria um AVD (Windows); `scripts/setup-android-avd-wsl.sh` usa o emulador do Windows a partir do WSL. Passo a passo detalhado em [`docs/aulas/tutoriais/ANDROID_AVD_GUIA_COMPLETO.md`](aulas/tutoriais/ANDROID_AVD_GUIA_COMPLETO.md).
 - **Cache corrompido:** `npx expo start --clear`; se não resolver, apague `.expo`, `node_modules/.cache` e `android/app/build` e rode `npx expo run:android --no-build-cache`.
@@ -998,8 +979,6 @@ npx expo run:android        # development build; o Expo Go não suporta o Google
 ### Chamadas manuais à API
 
 A pasta `testes-http/` tem requisições para a extensão REST Client do VS Code. Muitas usam o login por senha e o Railway, que não valem mais, e algumas chamam os stubs do admin-service. Para obter um JWT, faça login num app em modo de desenvolvimento: o log do Metro mostra cada requisição com o header `Authorization`.
-
----
 
 ## 11. Testes
 
@@ -1011,25 +990,27 @@ A pasta `testes-http/` tem requisições para a extensão REST Client do VS Code
 | admin-service | idem | 16 + 14 | idem |
 | matchmaking-service | JUnit 5 | 4 (service) | idem |
 | api-gateway | — | nenhum | — |
-| `packages/auth` | Jest (`jest-expo`) | 8 (`errorHandler`, `shouldRefreshToken`) | `cd mobile && npm test` (todos os workspaces) |
-| mentoradoApp | Jest + React Native Testing Library | 2 de exemplo (`LoginScreen`) | idem |
-| mentorApp | idem | 2 de exemplo (`LoginScreen`) | idem |
-| adminApp | idem | 6 de exemplo (`LoginScreen`, verificação do papel `ADMIN`) | idem |
+| `packages/auth` | Jest (`jest-expo`) | 8 (`errorHandler`, `shouldRefreshToken`) | `npm test -w @mentorias/auth`, na raiz do repositório de cada app |
+| `mentorado` | Jest + React Native Testing Library | 2 de exemplo (`LoginScreen`) | `npm test`, na raiz do repositório |
+| `mentor` | idem | 2 de exemplo (`LoginScreen`) | idem |
+| `administrador` | idem | 6 de exemplo (`LoginScreen`, verificação do papel `ADMIN`) | idem |
 
 Os testes de API (`*ControllerTest`) passam pela cadeia real do Spring Security, com JWTs assinados. Eles cobrem as regras de acesso de cada endpoint e os códigos de erro. Não há testes de integração com MongoDB (Testcontainers), cobertura (JaCoCo) nem testes end-to-end, apesar de previstos em documentos antigos.
 
----
-
 ## 12. CI/CD e deploy
 
-### Workflows do GitHub Actions (`.github/workflows`)
+### Workflows do GitHub Actions
+
+Neste repositório (`.github/workflows`):
 
 | Workflow | Gatilho | O que faz | Situação |
 |---|---|---|---|
 | `backend-ci.yml` | push/PR em `develop`/`main` com mudança em `backend/**` | Build Maven + `mvn test` dos 6 serviços (MongoDB como serviço do job) | Em uso |
-| `mobile-ci.yml` | push/PR com mudança em `mobile/**` | `npm ci` em `mobile/` (workspaces); para os 3 apps e o `packages/auth`: ESLint e Jest, os dois bloqueando o PR | Em uso |
+| `mobile-ci.yml` | push/PR com mudança em `mobile/**` | `npm ci` em `mobile/` (workspaces); para os 3 apps e o `packages/auth`: ESLint e Jest, os dois bloqueando o PR | Só para a cópia do starter em `mobile/` |
 | `deploy-staging.yml` | push em `develop` | Build e deploy no **Railway** | Não usado (exige `RAILWAY_TOKEN`; o deploy real é no Heroku) |
 | `deploy-production.yml` | release publicada ou manual | Testes e deploy no **Railway** | Não usado |
+
+Em cada repositório de app (`mentorado`, `mentor`, `administrador`), o `.github/workflows/ci.yml` roda em push e PR para `develop` e `main`: `npm ci` na raiz, ESLint do app e do `@mentorias/auth` (`--max-warnings 0`) e Jest dos dois. Todos os passos bloqueiam o PR.
 
 Também em `.github/`: templates de issue (`bug_report`, `feature_request`, `task`), `PULL_REQUEST_TEMPLATE.md` e `dependabot.yml`.
 
@@ -1093,12 +1074,10 @@ eas build -p android --profile production
 eas submit -p android --profile production   # usa ./play-service-account.json (fora do git) e a trilha interna
 ```
 
-- Rode o `eas build` de dentro da pasta do app. As dependências são instaladas a partir de `mobile/` (npm workspaces), o que inclui o `@mentorias/auth`.
+- Rode o `eas build` na raiz do repositório do app. O EAS instala as dependências pelo `package-lock.json` da raiz (npm workspace), o que inclui o `@mentorias/auth` de `packages/auth`.
 - A URL da API vem de `EXPO_PUBLIC_API_BASE_URL`, lida pelo `app.config.js` de cada app; sem ela, o build usa o gateway de produção.
 - As variáveis `EXPO_PUBLIC_*` precisam existir no ambiente de build do EAS (`eas env:create`). O `.env` local não vai para o build.
 - O EAS assina o APK com um certificado próprio de cada app. Cadastre o SHA-1 dele (em `eas credentials`) no Firebase; sem isso, o login Google falha no APK instalado, mesmo funcionando no *development build*.
-
----
 
 ## 13. Operação e solução de problemas
 
@@ -1136,7 +1115,7 @@ eas submit -p android --profile production   # usa ./play-service-account.json (
 | 401 em todos os serviços logo após o login | `JWT_SECRET` diferente entre o auth-service e os demais | Mesmo segredo em todos; refaça o login |
 | App do administrador mostra "Acesso restrito" para um admin recém-promovido | Os papéis vêm no token | Saia e entre de novo |
 | Mentor aprovado recebe 403 ao agendar | Token antigo ainda sem `ROLE_MENTOR` | Refaça o login no backend (ou feche e reabra o app) |
-| App quebra com "Invalid hook call" ou duas versões do React | Um `node_modules` dentro do app, de uma instalação feita fora do workspace | Apague o `node_modules` do app e rode `npm ci` em `mobile/` |
+| App quebra com "Invalid hook call" ou duas versões do React | Um `node_modules` dentro de `packages/auth`, de uma instalação feita na pasta do pacote | Apague `packages/auth/node_modules` e rode `npm ci` na raiz do repositório do app |
 | Mentoria fica em `pending_match` | Nenhum mentor `APPROVED`, matchmaking fora do ar ou `PROFILE_SERVICE_URL` errado no mentorship | Confira os mentores aprovados e as URLs; veja o log do mentorship |
 | Solicitar mentoria dá `voucher_required` | Mentorado sem voucher `redeemed` | Resgatar um voucher antes |
 | Login Google no Android: `DEVELOPER_ERROR` / `12500` | SHA-1 não cadastrado ou `google-services.json` desatualizado | Cadastre o SHA-1 e baixe o arquivo de novo |
@@ -1145,8 +1124,6 @@ eas submit -p android --profile production   # usa ./play-service-account.json (
 | `heroku container:push` 404 / não autorizado | App inexistente ou login do registry expirado | `heroku apps`; `heroku container:login` |
 | `heroku container:rm` pede *process type* | Sintaxe | `heroku container:rm web --app <app>` |
 | Build Maven falha dentro do Docker | Dependência ou memória | Rode `mvn -B package` localmente para ver o erro completo |
-
----
 
 ## 14. Segurança
 
@@ -1175,6 +1152,8 @@ eas submit -p android --profile production   # usa ./play-service-account.json (
 - **`JWT_SECRET`:** um valor antigo ficou publicado no histórico do git. Gere um novo e configure em todos os apps do Heroku.
 - **Senha do MongoDB Atlas:** apareceu em texto puro em versões antigas da documentação (`docs/infra`). Esses arquivos foram removidos, mas a senha continua no histórico do git: troque a senha do usuário no Atlas.
 - **Chaves do Firebase:** a chave web e o `google-services.json` são configuração de cliente, públicos por natureza. Restrinja a API key no Google Cloud Console (por app e domínio). Já a conta de serviço (`FIREBASE_CREDENTIALS_JSON`) é secreta.
+- **Conta de serviço versionada:** o arquivo `mentorias-uberhub-firebase-adminsdk-fbsvc-….json` está na raiz deste repositório (privado). Remova-o do git, gere uma chave nova no Firebase e apague a antiga; o histórico do git continua com a chave antiga.
+- **Repositórios dos apps:** são públicos. Neles podem ficar o `google-services.json` e o `.env.example` (configuração de cliente), nunca o `.env` nem segredos do backend.
 - **Onde guardar segredos:** em variáveis do Heroku, secrets do GitHub ou variáveis do EAS, nunca em arquivos do repositório.
 
 ### Checklist de produção
@@ -1186,8 +1165,6 @@ eas submit -p android --profile production   # usa ./play-service-account.json (
 - [ ] Backup do banco configurado
 - [ ] Health checks monitorados
 
----
-
 ## 15. Processo de trabalho
 
 ### Organização
@@ -1195,7 +1172,7 @@ eas submit -p android --profile production   # usa ./play-service-account.json (
 | Item | Definição |
 |---|---|
 | Método | Scrum, sprints de 1 semana com entrega às sextas; o professor é Product Owner e Scrum Master |
-| Equipes | Três, uma por app: mentorado, mentor e administrador |
+| Equipes | Três, uma por app e por repositório: `spi-ce-2026/mentorado`, `spi-ce-2026/mentor` e `spi-ce-2026/administrador` |
 | Cerimônias | Na aula de sexta: demo da entrega da semana, planning da sprint seguinte e desenvolvimento; o restante do trabalho no EAD |
 | Roadmap | 5 sprints, de 06/11 a 11/12/2026, conforme o plano da disciplina |
 | Quadro | GitHub Projects: Backlog → Sprint Backlog → In Progress → In Review → QA → Done |
@@ -1203,14 +1180,14 @@ eas submit -p android --profile production   # usa ./play-service-account.json (
 
 ### Git
 
-- **Branches:** `main` (produção) e `develop` (integração) são protegidas. O trabalho acontece em `feature/*`, `fix/*`, `refactor/*`, `test/*` e `docs/*`, a partir de `develop`; `hotfix/*` parte de `main`.
+- **Branches:** cada repositório de app tem `main` (entregas) e `develop` (integração), as duas protegidas. As equipes trabalham em `feature/*`, `fix/*`, `refactor/*`, `test/*` e `docs/*`, a partir de `develop`, e fazem o merge na `develop` por PR. Só o professor faz o merge da `develop` na `main`, a cada entrega; `hotfix/*` parte de `main`.
 - **Nome da branch:** `<tipo>/<número-da-issue>-<descrição-curta>` (ex.: `feature/42-push-notifications`).
 - **Commits:** [Conventional Commits](https://www.conventionalcommits.org/), no formato `<tipo>(<escopo>): <descrição>`.
   - Tipos: `feat`, `fix`, `refactor`, `test`, `docs`, `chore`, `style`, `perf`.
   - Escopos: `auth`, `profile`, `matchmaking`, `mentorship`, `admin`, `gateway`, `mentor-app`, `mentorado-app`, `admin-app`, `ci`, `docker`.
 - **Pull requests:**
   - pequenos (menos de 400 linhas), com a issue associada;
-  - pelo menos 1 revisor da equipe; um PR que muda `mobile/packages/auth` precisa de um revisor de cada equipe;
+  - pelo menos 1 revisor da equipe; um PR que muda `packages/auth` é combinado com o professor, que replica a mudança nos outros dois repositórios ([seção 9.2](#92-pacote-mentoriasauth));
   - build e testes verdes no CI;
   - merge com squash.
 
@@ -1223,8 +1200,6 @@ Código funcionando · review aprovado · testes escritos e passando · lint sem
 - **Backend:** lógica só em `service/`; controller apenas traduz HTTP; erros de negócio por exceção com código (`BusinessRuleException("codigo", "mensagem")`) tratados no `GlobalExceptionHandler`; Bean Validation nos DTOs.
 - **Mobile:** componentes funcionais com hooks; Context API para estado global; sessão pelo `useAuth` do `@mentorias/auth`; chamadas à API só por `src/services/api.js`, sobre o `api` do pacote; tratamento de erro com `ErrorDisplay`/`showErrorAlert`; ESLint (flat config).
 - Detalhes adicionais em `CONTRIBUTING.md` (raiz). O material da aula de onboarding (Scrum, squads, sprints) está em [`docs/aulas/onboarding/`](aulas/onboarding/).
-
----
 
 ## 16. Limitações conhecidas e próximos passos
 
@@ -1256,16 +1231,14 @@ Código funcionando · review aprovado · testes escritos e passando · lint sem
 - Sem testes no gateway. Os apps têm só os testes de exemplo do starter.
 - Os workflows de deploy apontam para o Railway e não são usados.
 
----
-
 ## 17. Glossário
 
 | Termo | Significado |
 |---|---|
-| Mentorado (mentee) | Quem busca orientação; usa o mentoradoApp |
-| Mentor | Profissional que orienta; usa o mentorApp depois de aprovado |
-| Administrador | Quem aprova mentores e gerencia vouchers e usuários; usa o adminApp e precisa do papel `ADMIN` |
-| Starter | Versão inicial dos apps: login, sessão e navegação prontos; as telas de cada funcionalidade são implementadas pelas equipes |
+| Mentorado (mentee) | Quem busca orientação; usa o app do repositório `mentorado` |
+| Mentor | Profissional que orienta; usa o app do repositório `mentor` depois de aprovado |
+| Administrador | Quem aprova mentores e gerencia vouchers e usuários; usa o app do repositório `administrador` e precisa do papel `ADMIN` |
+| Starter | Versão inicial dos apps, publicada nos repositórios de `spi-ce-2026`: login, sessão e navegação prontos; as telas de cada funcionalidade são implementadas pelas equipes |
 | Voucher | Código distribuído pelo admin. Resgatado, vira **1 crédito**; consumido, vira uma mentoria |
 | Crédito de voucher | Voucher com status `redeemed` do mentorado |
 | Matchmaking | Escolha automática do mentor mais compatível por tags e preferências |
@@ -1276,91 +1249,3 @@ Código funcionando · review aprovado · testes escritos e passando · lint sem
 | Stub | Endpoint que existe, mas ainda não executa a operação |
 | Development build | Build nativo do app Expo com módulos nativos (necessário por causa do Google Sign-In) |
 | EAS | Serviço de build e publicação da Expo |
-
----
-
-
-## Apêndice A — Reorganização da documentação
-
-Em 24/10/2026, a pasta `docs/` foi reorganizada a partir de uma análise de cada arquivo contra o código. A estrutura ficou assim:
-
-```
-docs/
-├── DOCUMENTACAO-DO-PROJETO.md   este documento (referência única do sistema)
-├── projeto/                     especificação de requisitos, mockups, briefing original, logo
-└── aulas/                       material de aula, tutoriais, histórico, modelos, audiovisual
-logs/
-├── README.md                    guia rápido dos scripts de log
-└── GUIA-DEFINITIVO-LOGS.md      guia completo
-```
-
-| Classificação | Critério | Destino |
-|---|---|---|
-| Incorporado | O conteúdo válido foi trazido para este documento | Removido |
-| Desatualizado | Contradiz o código (Railway, login por senha, design inicial) | Removido |
-| Duplicado | Cópia ou versão anterior de outro arquivo | Removido (fica a versão mais nova) |
-| Tutorial | Conteúdo genérico, não específico do projeto | `docs/aulas/tutoriais/` |
-| Aula/Histórico | Aulas, planos e especificações de fases anteriores | `docs/aulas/<tema>/` |
-| Referência | Continua válido | Mantido |
-
-Os arquivos removidos continuam no histórico do git. Para recuperar um deles: `git log --all -- "<caminho antigo>"` e `git show <commit>^:"<caminho antigo>"`.
-
-### `docs/` (raiz)
-
-| Arquivo antigo | Classificação | Destino |
-|---|---|---|
-| `Arquitetura.md`, `RUNBOOK.md`, `SECURITY_CHECKLIST.md`, `TESTING.md` | Incorporado | Removido (seções 3, 13, 14 e 11) |
-| `DIAGRAMA_SEQUENCIA_LOGIN.md`, `diagrama-sequencia-login.md` | Incorporado | Removido (seção 4) |
-| `FIREBASE_CONFIGURACAO_COMPLETA.md`, `comandos-limpa-cache.md` | Incorporado | Removido (seção 10) |
-| `API_INTEGRACAO_COMPLETA.md`, `DEPLOY_GUIDE.md`, `fluxo.md` | Desatualizado | Removido |
-| `AULA_ONBOARDING_COMPLETA copy.md` | Duplicado | Removido |
-| `CI_CD_GITHUB_GUIA_COMPLETO.md` | Duplicado (versão anterior) | Removido; a versão mais nova foi para `aulas/tutoriais/` |
-| `~$APRESENTACAO_ONBOARDING.pptx` | Temporário do PowerPoint | Removido |
-| `APRESENTACAO_ONBOARDING.md`/`.pptx`, `AULA_ONBOARDING_COMPLETA.md`/`.docx`/`.pptx`, `AULA_PLANO_IMPLEMENTACAO.md` | Aula | `aulas/onboarding/` |
-| `evolucao-sistemas.md` | Histórico | `aulas/historico/` |
-| `NOTIFICACOES_DEEP_LINKING_GUIA_COMPLETO.md`, `ANDROID_AVD_GUIA_COMPLETO.md`, `PADROES_CODIGO_GUIA_COMPLETO.md`, `EXPLICACAO_USE_CONTEXT.md`, `BUSCA_SEM_COMENTARIOS.md`, `GUIA_LISTAR_MD_DATA.md` | Tutorial | `aulas/tutoriais/` |
-| `audiovisual/` (vídeos, áudios e transcrição) | Aula | `aulas/audiovisual/` |
-| `docs-html/` (exportação HTML da especificação) | Duplicado | Removido |
-
-### `docs/auth/` e `docs/Autenticação/`
-
-| Arquivo antigo | Classificação | Destino |
-|---|---|---|
-| `FIREBASE_AUTH_FLOW.md` (2 versões), `CONFIGURAR_SHA1_ANDROID.md` | Incorporado | Removido (seções 4 e 10) |
-| `FIREBASE_CONFIGURACAO_COMPLETA.md`, `PADROES_CODIGO_GUIA_COMPLETO.md` | Duplicado | Removido |
-| `auth/AULA_FIREBASE_AUTH.md` | Aula | `aulas/autenticacao/AULA_FIREBASE_AUTH.md` |
-| `Autenticação/AULA_FIREBASE_AUTH.md` | Aula (outra aula, mais antiga) | `aulas/autenticacao/AULA_FIREBASE_AUTH-v1.md` |
-| `auth/BACKLOG_GITHUB_PROJECT.md`, `auth/Plano-implementação-autenticação-web-e-mobile.md` | Histórico | `aulas/autenticacao/` |
-| `Autenticação/BACKLOG_GITHUB_PROJECT.md`, `Autenticação/Plano-implementação-…` | Duplicado (versão anterior) | Removido |
-| `auth/CI_CD_GITHUB_GUIA_COMPLETO.md` | Tutorial | `aulas/tutoriais/` |
-| `auth/firebase_config.png`, `auth/google-services.json.png` | Imagens da aula | `aulas/autenticacao/` |
-| `auth/mentorias.png` | Sem referência | Removido |
-
-### `docs/infra/`
-
-| Arquivo antigo | Classificação | Destino |
-|---|---|---|
-| `DEPLOY.md`, `HEROKU-CONFIG-AUTH-SERVICE.md`, `SOLUCAO-ERRO-SSL-MONGODB.md`, `VERIFICAR-NETWORK-ACCESS.md` | Incorporado; continham a senha do Atlas | Removido (seções 12 e 13) |
-| `HEROKU-CONFIG-API-GATEWAY.md`, `SOLUCAO-DOCKER-WINDOWS.md`, `SOLUCAO-ERRO-CONTAINER-REGISTRY.md`, `SOLUCAO_ERRO_DOCKER_BUILD_MAVEN.md`, `HEROKU_CONTAINER_RM.md`, `docker.md` | Incorporado | Removido (seções 12 e 13) |
-| `Guia-rapido-logs.md`, `GUIA-DEFINITIVO-LOGS.md` | Guia dos scripts de `logs/` | `logs/README.md`, `logs/GUIA-DEFINITIVO-LOGS.md` |
-| `DEPLOY-QUICK-START.md`, `SOLUCAO-ERRO-AUTH-RAILWAY-MONGODB.md` | Desatualizado (Railway) | Removido |
-| `ATUALIZAR-SENHAS-MONGODB.md`, `GERAR-HASH-BCRYPT.md`, `SEED-MONGODB-PLAYGROUND.md` | Desatualizado (login por senha) | Removido |
-| `MONGODB-INSTALLATION.md`, `MONGODB-PLAYGROUND.md`, `MONGODB-VISUALIZATION.md`, `MONGODB-BANCOS-INTERNOS.md`, `JAVA-RECORDS-EXPLANATION.md` | Tutorial | `aulas/tutoriais/` |
-
-### `docs/projeto/`
-
-| Arquivo antigo | Classificação | Destino |
-|---|---|---|
-| `Especificação-de-Requisitos-UberHub-Mentorias.md` | Referência (fonte das RNs; status na seção 8) | Mantido |
-| `Mockup Baixa Fidelidade*.png`, `Projeto Aplicativo de Mentorias UberHub.pdf`, `logo udicentro.png` | Referência | Mantido |
-| `Arquitetura-v3.md`, `Endpoints.md`, `FLUXOS-JORNADAS-OPERACOES.md`, `DEPENDENCIAS-TEMPORAIS-FLUXOS.md`, `DIAGRAMA_APROVACAO_MENTOR.md`, `Mobile-apps.md` | Incorporado | Removido (seções 2, 3, 5, 6, 7 e 9) |
-| `Arquitetura-v2.md`, `Especificação-de-Endpoints-da-API-(Por-Equipe-e-Serviço).md`/`.pdf` | Desatualizado | Removido |
-| `Requisitos-Funcionais-do-Backend-(Por-Equipe-e-Serviço).md`/`.pdf`, `admin-doc.pdf`, `auth-and-profile-doc.pdf`, `matchmaking-doc.pdf`, `mentorship-doc.pdf`, `starter_mentorias_rn_spring_boot_microservicos.md` | Histórico | `aulas/historico/` |
-| `Especificação-de-Requisitos-(modelo).md`, `Documentação de Projeto - Assini.pdf` | Modelo | `aulas/modelos/` |
-
-### Fora de `docs/`
-
-- `README.md`: reescrito como porta de entrada, apontando para este documento.
-- `CONTRIBUTING.md`: continua válido (resumido na seção 15).
-- `backend/profile-service/docs/`: taxonomia de tags; continua válida.
-- Os arquivos de áudio e vídeo (cerca de 240 MB) continuam no git. Se o repositório ficar pesado, considere o Git LFS ou um armazenamento externo.
