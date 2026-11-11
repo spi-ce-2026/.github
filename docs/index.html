@@ -212,13 +212,8 @@ footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line);
     <table>
       <thead><tr><th>Quando</th><th>O que fazer</th><th>Por quê</th></tr></thead>
       <tbody>
-        <tr><td class="when">Feito em 06/11</td><td>Starter publicado na <code>main</code> e na <code>develop</code> dos repositórios <code>mentorado</code>, <code>mentor</code> e <code>administrador</code>. O PR #1 do <code>administrador</code> ("Tela login") ficou em conflito com o starter: fechar ou refazer sobre ele.</td><td>Os repositórios têm só os apps, sem o backend.</td></tr>
-        <tr><td class="when">Até 13/11</td><td>Publicar no Heroku o backend da <code>main</code> do <code>mentorias-starter</code>, que tem as correções de sessão (401 para token vencido).</td><td>Os alunos só têm acesso a esse backend; sem o deploy, a renovação de sessão do starter não dispara.</td></tr>
-        <tr><td class="when">06/11</td><td>Distribuir pelo ambiente virtual os valores do <code>.env</code> (<code>EXPO_PUBLIC_FIREBASE_*</code> e <code>EXPO_PUBLIC_GOOGLE_CLIENT_ID</code>), que são iguais nos três apps, exceto o App ID.</td><td>O <code>.env</code> não vai para o Git, e sem ele o login não funciona.</td></tr>
-        <tr><td class="when">06/11</td><td>Criar o quadro no GitHub Projects com uma issue por item do backlog e os labels <code>mentorado-app</code>, <code>mentor-app</code> e <code>admin-app</code>.</td><td>As equipes escolhem as issues na planning da aula 3.</td></tr>
-        <tr><td class="when">Até 10/11</td><td>Registrar no projeto Firebase <code>mentorias-uberhub</code> o app Android <code>com.professorangoti.adminApp</code>, com o SHA-1 de debug <code>5E:8F:16:06:…</code> (é o do certificado que o <code>expo prebuild</code> gera, igual em todas as máquinas, e já está cadastrado no app do mentor). Conferir o mesmo SHA-1 no app do mentorado. Baixar o <code>google-services.json</code> de novo e usar o mesmo arquivo nos três apps.</td><td>Sem isso, o login Google falha no app do administrador.</td></tr>
-        <tr><td class="when">Até 10/11</td><td>Dar o papel de administrador às contas Google da equipe do administrador no backend de integração: <code>"role": "MENTEE,ADMIN"</code> em <code>auth_db.users</code>.</td><td>Não há endpoint público que crie administrador.</td></tr>
-        <tr><td class="when">Até 04/12</td><td>Cadastrar no Firebase o SHA-1 do certificado que o EAS usa em cada app (aparece em <code>eas credentials</code>).</td><td>O APK do EAS é assinado com outro certificado; sem o cadastro, o login falha no APK instalado.</td></tr>
+        <tr><td class="when">Feito em 06/11</td><td>Starter publicado na <code>main</code> dos repositórios <code>mentorado</code>, <code>mentor</code> e <code>administrador</code>.</td><td>Os repositórios têm só os apps, sem o backend.</td></tr>
+        <tr><td class="when">Até 13/11</td><td>Publicar no Heroku o backend, que tem as correções de sessão (401 para token vencido).</td><td>Sem o deploy, a renovação de sessão do starter não dispara.</td></tr>
       </tbody>
     </table>
   </div>
@@ -234,12 +229,11 @@ footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line);
         <tr><td>Base</td><td>Expo SDK 57 (React Native 0.86, React 19.2), JavaScript, React Navigation 7 e React Native Paper, nos três apps</td></tr>
         <tr><td>Repositório</td><td>O app na raiz e uma cópia do pacote em <code>packages/auth</code>, ligados por um npm workspace, com um único <code>package-lock.json</code>; <code>docs/API.md</code>, <code>docs/projeto</code> e templates de issue e pull request</td></tr>
         <tr><td>Login e sessão</td><td>Pacote <code>@mentorias/auth</code>: Google Sign-In nativo, Firebase, <code>POST /auth/login</code>, sessão restaurada ao abrir o app, renovação do token em 401 e logout. As telas usam <code>useAuth()</code></td></tr>
-        <tr><td>Cliente HTTP</td><td><code>api</code> (Axios) com a URL do <code>.env</code> e o token; cada app tem um <code>src/services/api.js</code> de exemplo</td></tr>
+        <tr><td>Cliente HTTP</td><td><code>api</code> (Axios) com a URL do <code>.env</code> e o token</td></tr>
         <tr><td>Navegação</td><td>Mentorado: Login, abas Início e Conta. Mentor: Login, cadastro do perfil, espera pela aprovação e abas Mentorias e Conta, escolhidos pelo <em>hook</em> <code>useMentorProfile</code>, que devolve um valor fixo. Administrador: Login, tela "Acesso restrito" para quem não tem <code>ADMIN</code> e abas Início, Mentores, Vouchers, Usuários e Conta</td></tr>
         <tr><td>Telas</td><td>Login e Conta prontas; as demais vazias, cada uma com o caso de uso que entra nela</td></tr>
-        <tr><td>Componentes</td><td><code>LoadingSpinner</code>, <code>EmptyState</code> e <code>ErrorDisplay</code></td></tr>
         <tr><td>Qualidade</td><td>ESLint, Jest com React Native Testing Library, testes de exemplo do app e do pacote, e CI no GitHub Actions com lint e testes dos dois bloqueando o PR</td></tr>
-        <tr><td>Configuração</td><td><code>app.config.js</code> lendo o <code>.env</code>; <code>.env.example</code> e <code>eas.json</code> em cada app</td></tr>
+        <tr><td>Configuração</td><td><code>app.config.js</code> lendo o <code>.env</code>; <code>.env.example</code> em cada app</td></tr>
       </tbody>
     </table>
   </div>
@@ -251,14 +245,15 @@ footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line);
     <table>
       <thead><tr><th>Momento</th><th>Duração</th><th>O que acontece</th></tr></thead>
       <tbody>
-        <tr><td><strong>Aula 1</strong> (sexta)</td><td class="n">50 min</td><td>Entrega da semana: cada equipe demonstra, em até 10 min, o que está na tag <code>sprint-N</code>, rodando contra o backend de integração. Em 06/11, apresentação do projeto, deste plano e formação das equipes.</td></tr>
+        <tr><td><strong>Toda sexta-feiraula</strong></td><td class="n">50 min</td><td>Entrega da semana: cada equipe demonstra, em até 10 min, o que está na tag <code>sprint-N</code>, rodando contra o backend de integração.</td></tr>
+        <tr><td><strong>Aula 1</strong> (sexta)</td><td class="n">50 min</td><td>Em 06/11, apresentação do projeto e este plano.</td></tr>
         <tr><td><strong>Aula 2</strong></td><td class="n">50 min</td><td>Conteúdo técnico da semana (indicado em cada sprint).</td></tr>
         <tr><td><strong>Aulas 3 e 4</strong></td><td class="n">100 min</td><td>Planning de 15 min (a equipe escolhe as issues da sprint) e desenvolvimento em equipe, com o professor tirando dúvidas.</td></tr>
         <tr><td><strong>EAD</strong></td><td class="n">3 h</td><td>Terminar as issues, abrir os pull requests e revisar o PR de um colega.</td></tr>
       </tbody>
     </table>
   </div>
-  <p class="done"><strong>O que conta como entrega:</strong> o que estiver na branch <code>develop</code>, com o CI verde, no início da aula 1 de sexta. Nesse momento o professor cria a tag <code>sprint-N</code>, que é a versão avaliada.</p>
+  <p class="done"><strong>O que conta como entrega:</strong> o que estiver na branch <code>main</code>, com o CI verde, no início da aula. Nesse momento o professor cria a tag <code>sprint-N</code>, que é a versão avaliada.</p>
 </section>
 
 <section class="block" id="sprints">
@@ -271,19 +266,18 @@ footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line);
       <p class="theme"><b>Aula 2:</b> o starter por dentro (workspace, <code>useAuth</code>, <code>api</code>, <code>RootNavigator</code>), <em>development build</em>, Git e pull request.</p>
       <div class="apps">
         <section class="app plat"><h4>Todas as equipes</h4><ul>
-          <li>Instalar com <code>npm ci</code> na raiz do repositório, criar o <code>.env</code>, rodar <code>npx expo prebuild -p android --clean</code> e <code>npx expo run:android</code>, e entrar com Google no emulador.</li>
-          <li>Começar o primeiro build Android nas aulas 3 e 4: ele é demorado.</li>
+          <li>Instalar com <code>npm ci</code> na raiz do repositório, criar o <code>.env</code>, rodar <code>npx expo prebuild -p android --clean</code> e <code>npx expo run:android --port 8088</code>, e entrar com Google no emulador.</li>
         </ul></section>
         <section class="app mentorado"><h4><i class="dot mentorado"></i>Mentorado</h4><ul>
-          <li>UC04 Resgatar voucher, com mensagem para <code>invalid_or_expired_voucher</code>.</li>
-          <li>Créditos na Início: o número de vouchers <code>redeemed</code> de <code>GET /admin/vouchers/mine</code>.</li>
+          <li>UC04 Resgatar voucher.</li>
+          <li>Créditos na tela: o número de vouchers <code>redeemed</code> de <code>GET /admin/vouchers/mine</code>.</li>
         </ul></section>
         <section class="app mentor"><h4><i class="dot mentor"></i>Mentor</h4><ul>
           <li>Implementar o <code>useMentorProfile</code> com <code>GET /profiles/mentor/{user.id}</code> (404 = sem perfil), para a navegação seguir o perfil real.</li>
           <li>Tela própria para o perfil <code>REJECTED</code>, separada da espera pela aprovação.</li>
         </ul></section>
         <section class="app admin"><h4><i class="dot admin"></i>Administrador</h4><ul>
-          <li>UC20 Usuários: listar, filtrar por papel, status, nome ou e-mail, e suspender ou reativar com confirmação. Pedir uma segunda confirmação para suspender outro administrador (RN71).</li>
+          <li>UC20 Usuários: listar, filtrar por papel, status, nome ou e-mail, e suspender ou reativar com confirmação.</li>
         </ul></section>
       </div>
       <p class="done"><strong>Entrega 13/11:</strong> login nos três apps no emulador, e a primeira funcionalidade de cada um funcionando contra o backend.</p>
@@ -300,23 +294,21 @@ footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line);
         </ul></section>
         <section class="app mentor"><h4><i class="dot mentor"></i>Mentor</h4><ul>
           <li>UC10 e UC11 Criar perfil: minibio, áreas escolhidas entre as tags (pelo menos uma, RN54) e link de agendamento com URL válida (RN55).</li>
-          <li>Quando o perfil passar a <code>APPROVED</code>, refazer o login no backend para receber o <code>ROLE_MENTOR</code>. Exige uma função nova na cópia do <code>@mentorias/auth</code> do repositório do mentor; combine com o professor.</li>
+          <li>Quando o perfil passar a <code>APPROVED</code>, refazer o login no backend para receber o <code>ROLE_MENTOR</code>.</li>
         </ul></section>
         <section class="app admin"><h4><i class="dot admin"></i>Administrador</h4><ul>
           <li>UC16 Aprovar ou reprovar mentor: lista de pendentes, detalhe do perfil e confirmação antes de aprovar ou reprovar.</li>
           <li>UC17 Gerar vouchers em lote e um por vez; copiar e compartilhar os códigos gerados.</li>
         </ul></section>
       </div>
-      <p class="done"><strong>Entrega 20/11 (feriado):</strong> o professor cria a tag <code>sprint-2</code> às 23h59 de 20/11, e cada equipe posta no ambiente virtual um vídeo de até 3 min com a demo. A demo ao vivo fica para a aula 1 de 27/11.</p>
     </article>
 
     <article class="sprint" id="sprint-3">
-      <div class="sprint-head"><span class="num">Sprint 3</span><h3>Acompanhamento</h3><span class="flag">Sem aula presencial</span><span class="dates">20/11 → entrega 27/11</span></div>
+      <div class="sprint-head"><span class="num">Sprint 3</span><h3>Acompanhamento</h3><span class="dates">20/11 → entrega 27/11</span></div>
       <p class="goal"><strong>Objetivo:</strong> o mentorado acompanha a mentoria e vê o mentor; o mentor vê as mentorias atribuídas. O escopo é menor porque a semana só tem as 3 h de EAD; o que sobrar vai para as pendências das sprints 1 e 2.</p>
-      <p class="theme"><b>Material EAD:</b> listas com <code>FlatList</code> (filtros, puxar para atualizar, estados vazio e carregando) e testes com Jest e React Native Testing Library.</p>
       <div class="apps">
         <section class="app mentorado"><h4><i class="dot mentorado"></i>Mentorado</h4><ul>
-          <li>UC09 Mentorias do usuário na Início, com o status em linguagem simples (ex.: <code>matched</code> = "aguardando agendamento").</li>
+          <li>UC09 Mentorias do usuário na tela, com o status em linguagem simples (ex.: <code>matched</code> = "aguardando agendamento").</li>
           <li>UC06 Ver o perfil do mentor atribuído e abrir o link de agendamento externo.</li>
         </ul></section>
         <section class="app mentor"><h4><i class="dot mentor"></i>Mentor</h4><ul>
@@ -332,7 +324,6 @@ footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line);
     <article class="sprint" id="sprint-4">
       <div class="sprint-head"><span class="num">Sprint 4</span><h3>Sessão e avaliação</h3><span class="dates">27/11 → entrega 04/12</span></div>
       <p class="goal"><strong>Objetivo:</strong> o ciclo completo da mentoria funciona de ponta a ponta entre os três apps.</p>
-      <p class="theme"><b>Aula 2:</b> datas e fuso horário e o ciclo de status da mentoria (<code>pending_match</code> → <code>matched</code> → <code>scheduled</code> → <code>in_progress</code> → <code>completed</code>).</p>
       <div class="apps">
         <section class="app mentorado"><h4><i class="dot mentorado"></i>Mentorado</h4><ul>
           <li>Confirmar ou recusar o horário que o mentor registrou.</li>
@@ -352,12 +343,11 @@ footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line);
     <article class="sprint" id="sprint-5">
       <div class="sprint-head"><span class="num">Sprint 5</span><h3>Acabamento e entrega final</h3><span class="dates">04/12 → entrega 11/12</span></div>
       <p class="goal"><strong>Objetivo:</strong> completar o que for desejável e deixar os três apps prontos para instalar, sem telas quebradas.</p>
-      <p class="theme"><b>Aula 2:</b> build pelo EAS (APK do perfil <code>preview</code>), checklist de qualidade e preparação da apresentação.</p>
       <div class="apps">
         <section class="app plat"><h4>Todas as equipes</h4><ul>
           <li>Estados de carregamento, vazio e erro em todas as telas.</li>
           <li>Testes das telas principais e lint sem erros.</li>
-          <li>APK com <code>eas build -p android --profile preview</code> e README do app atualizado.</li>
+          <li>APK com <code>gradlew assembleRelease</code> e README do app atualizado.</li>
         </ul></section>
         <section class="app mentorado"><h4><i class="dot mentorado"></i>Mentorado</h4><ul>
           <li>UC07 Pedir troca de mentor, com justificativa de 20 caracteres ou mais (RN38). <span class="opt">Desejável</span></li>
@@ -391,7 +381,11 @@ footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line);
 
 <section class="block" id="backlog">
   <h2>Backlog por app</h2>
-  <p class="note"><span class="chip ready">No starter</span> já vem pronto · <span class="chip ess">Essencial</span> exigido pelo roteiro de ponta a ponta · <span class="chip">Desejável</span> primeiro a cortar · <span class="chip bloq">Bloqueado</span> depende do backend.</p>
+  <p class="note">
+    <p><span class="chip ready">No starter</span> já vem pronto</p>
+    <p><span class="chip ess">Essencial</span> exigido pelo roteiro de ponta a ponta</p>
+    <p><span class="chip">Desejável</span> primeiro a cortar.</p>
+    <p><span class="chip bloq">Bloqueado</span> depende do backend.</p>
   <div class="cols">
     <div>
       <h3><i class="dot mentorado"></i>App do mentorado</h3>
@@ -446,10 +440,10 @@ footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line);
 
 <section class="block" id="api">
   <h2>Contratos da API</h2>
-  <p>Todas as chamadas passam pelo gateway, com o prefixo <code>/api/v1</code>. O <code>api</code> do starter já acrescenta esse prefixo e o header <code>Authorization: Bearer &lt;accessToken&gt;</code>. Os erros chegam como <code>{"status", "error", "message"}</code>, e o campo <code>error</code> traz um código estável para escolher a mensagem. A mesma referência, com os códigos de erro, está no <code>docs/API.md</code> de cada repositório.</p>
+  <p>Todas as chamadas passam pelo gateway, com o prefixo <code>/api/v1</code>. O <code>api</code> do starter (<code>packages\auth</code>) já acrescenta, usando axios interceptor, esse prefixo e o header <code>Authorization: Bearer &lt;accessToken&gt;</code>. Os erros chegam como <code>{"status", "error", "message"}</code>, e o campo <code>error</code> traz um código estável para escolher a mensagem. A mesma referência, com os códigos de erro, está no <code>docs/API.md</code> de cada repositório.</p>
   <div class="cols">
     <div>
-      <h3><i class="dot plat"></i>Login e sessão (prontos no starter)</h3>
+      <h3><i class="dot plat"></i>Login e sessão (prontos no starter <code>packages\auth</code>)</h3>
       <div class="table-wrap"><table>
         <thead><tr><th>Para quê</th><th>Chamada</th><th>Observação</th></tr></thead>
         <tbody>
@@ -531,10 +525,9 @@ footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line);
 <section class="block" id="regras">
   <h2>Regras de entrega</h2>
   <ul class="plain">
-    <li>Uma branch e um pull request por issue, a partir de <code>develop</code>, no formato <code>feature/&lt;issue&gt;-&lt;descrição&gt;</code>, com commits no padrão Conventional Commits (escopos <code>mentorado-app</code>, <code>mentor-app</code>, <code>admin-app</code> e <code>auth</code>).</li>
+    <li>Uma branch e um pull request por issue, no formato <code>feature/&lt;issue&gt;-&lt;descrição&gt;</code>, com commits no padrão Conventional Commits (escopos <code>mentorado-app</code>, <code>mentor-app</code>, <code>admin-app</code> e <code>auth</code>).</li>
     <li>Cada PR é revisado por outra pessoa da equipe e só entra com o CI verde (lint e testes).</li>
     <li>Uma mudança em <code>packages/auth</code> é combinada com o professor antes, porque a mesma cópia existe nos outros dois repositórios.</li>
-    <li>A demo roda contra o backend de integração, a partir da tag da sprint, e não de uma branch local.</li>
     <li>O <code>.env</code> não vai para o Git; o <code>.env.example</code> lista as variáveis.</li>
   </ul>
 </section>
@@ -573,7 +566,8 @@ footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line);
 </section>
 
 <footer>
-  <p>© 2026 Projeto da Curriculçarização da Extensão do Curso Superior de Tecnologia em Sistemas para Internet do Instituto Federal do Triângulo Mineiro
+  <p>© 2026 Professor Edson Angoti Júnior</p>
+  <p>Projeto da Curriculçarização da Extensão do Curso Superior de Tecnologia em Sistemas para Internet do Instituto Federal do Triângulo Mineiro</p>
 </footer>
 
 </div>
