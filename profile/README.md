@@ -26,8 +26,6 @@ Este documento descreve o sistema **como ele está implementado hoje**. O backen
 16. [Limitações conhecidas e próximos passos](#16-limitações-conhecidas-e-próximos-passos)
 17. [Glossário](#17-glossário)
 
-- [Apêndice A — Reorganização da documentação](#apêndice-a--reorganização-da-documentação)
-
 ## 1. Visão geral do produto
 
 **Problema.** Quem quer orientação profissional não sabe quem procurar, e quem quer ser mentor não encontra quem precisa. Hoje a conexão depende de sorte e indicação e não escala.
