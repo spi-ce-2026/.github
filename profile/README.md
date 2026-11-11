@@ -1,5 +1,6 @@
 # UberHub Mentorias — Documentação do Projeto
-[Plano de implementação](https://spi-ce-2026.github.io/.github/)
+
+[Plano de implementação](https://spi-ce-2026-starter-code.github.io/.github/)
 
 O UberHub Mentorias conecta mentorados a mentores por meio de vouchers e matchmaking por tags. O sistema tem 6 serviços Spring Boot atrás de um API Gateway e três apps React Native: o do mentorado, o do mentor e o do administrador. O backend fica neste repositório; cada app tem o próprio repositório na organização `spi-ce-2026` ([seção 3](#repositórios)). O login é feito com Google via Firebase, e o backend emite o próprio JWT.
 
