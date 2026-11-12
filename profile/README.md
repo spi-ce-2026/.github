@@ -18,13 +18,12 @@ Este documento descreve o sistema **como ele está implementado hoje**. O backen
 8. [Requisitos e regras de negócio](#8-requisitos-e-regras-de-negócio)
 9. [Apps mobile](#9-apps-mobile)
 10. [Ambiente de desenvolvimento](#10-ambiente-de-desenvolvimento)
-11. [Testes](#11-testes)
-12. [CI/CD e deploy](#12-cicd-e-deploy)
-13. [Operação e solução de problemas](#13-operação-e-solução-de-problemas)
-14. [Segurança](#14-segurança)
-15. [Processo de trabalho](#15-processo-de-trabalho)
-16. [Limitações conhecidas e próximos passos](#16-limitações-conhecidas-e-próximos-passos)
-17. [Glossário](#17-glossário)
+11. [CI/CD e deploy](#12-cicd-e-deploy)
+12. [Operação e solução de problemas](#13-operação-e-solução-de-problemas)
+13. [Segurança](#14-segurança)
+14. [Processo de trabalho](#15-processo-de-trabalho)
+15. [Limitações conhecidas e próximos passos](#16-limitações-conhecidas-e-próximos-passos)
+16. [Glossário](#17-glossário)
 
 ## 1. Visão geral do produto
 
@@ -979,37 +978,11 @@ npx expo run:android        # development build; o Expo Go não suporta o Google
 
 A pasta `testes-http/` tem requisições para a extensão REST Client do VS Code. Muitas usam o login por senha e o Railway, que não valem mais, e algumas chamam os stubs do admin-service. Para obter um JWT, faça login num app em modo de desenvolvimento: o log do Metro mostra cada requisição com o header `Authorization`.
 
-## 11. Testes
-
-| Parte | Ferramenta | O que existe | Como rodar |
-|---|---|---|---|
-| auth-service | JUnit 5, Mockito, `@WebMvcTest` | 15 unitários (service) + 8 de API | `cd backend/auth-service && mvn test` |
-| profile-service | idem | 12 + 7 | idem |
-| mentorship-service | idem | 24 + 8 | idem |
-| admin-service | idem | 16 + 14 | idem |
-| matchmaking-service | JUnit 5 | 4 (service) | idem |
-| api-gateway | — | nenhum | — |
-| `packages/auth` | Jest (`jest-expo`) | 8 (`errorHandler`, `shouldRefreshToken`) | `npm test -w @mentorias/auth`, na raiz do repositório de cada app |
-| `mentorado` | Jest + React Native Testing Library | 2 de exemplo (`LoginScreen`) | `npm test`, na raiz do repositório |
-| `mentor` | idem | 2 de exemplo (`LoginScreen`) | idem |
-| `administrador` | idem | 6 de exemplo (`LoginScreen`, verificação do papel `ADMIN`) | idem |
-
-Os testes de API (`*ControllerTest`) passam pela cadeia real do Spring Security, com JWTs assinados. Eles cobrem as regras de acesso de cada endpoint e os códigos de erro. Não há testes de integração com MongoDB (Testcontainers), cobertura (JaCoCo) nem testes end-to-end, apesar de previstos em documentos antigos.
-
-## 12. CI/CD e deploy
+## 11. CI/CD e deploy
 
 ### Workflows do GitHub Actions
 
-Neste repositório (`.github/workflows`):
-
-| Workflow | Gatilho | O que faz | Situação |
-|---|---|---|---|
-| `backend-ci.yml` | push/PR em `develop`/`main` com mudança em `backend/**` | Build Maven + `mvn test` dos 6 serviços (MongoDB como serviço do job) | Em uso |
-| `mobile-ci.yml` | push/PR com mudança em `mobile/**` | `npm ci` em `mobile/` (workspaces); para os 3 apps e o `packages/auth`: ESLint e Jest, os dois bloqueando o PR | Só para a cópia do starter em `mobile/` |
-| `deploy-staging.yml` | push em `develop` | Build e deploy no **Railway** | Não usado (exige `RAILWAY_TOKEN`; o deploy real é no Heroku) |
-| `deploy-production.yml` | release publicada ou manual | Testes e deploy no **Railway** | Não usado |
-
-Em cada repositório de app (`mentorado`, `mentor`, `administrador`), o `.github/workflows/ci.yml` roda em push e PR para `develop` e `main`: `npm ci` na raiz, ESLint do app e do `@mentorias/auth` (`--max-warnings 0`) e Jest dos dois. Todos os passos bloqueiam o PR.
+Em cada repositório de app (`mentorado`, `mentor`, `administrador`), o `.github/workflows/ci.yml` roda em push e PR para `main`: `npm ci` na raiz, ESLint do app e do `@mentorias/auth` (`--max-warnings 0`) e Jest dos dois. Todos os passos bloqueiam o PR.
 
 Também em `.github/`: templates de issue (`bug_report`, `feature_request`, `task`), `PULL_REQUEST_TEMPLATE.md` e `dependabot.yml`.
 
@@ -1078,7 +1051,7 @@ eas submit -p android --profile production   # usa ./play-service-account.json (
 - As variáveis `EXPO_PUBLIC_*` precisam existir no ambiente de build do EAS (`eas env:create`). O `.env` local não vai para o build.
 - O EAS assina o APK com um certificado próprio de cada app. Cadastre o SHA-1 dele (em `eas credentials`) no Firebase; sem isso, o login Google falha no APK instalado, mesmo funcionando no *development build*.
 
-## 13. Operação e solução de problemas
+## 12. Operação e solução de problemas
 
 ### Health checks
 
@@ -1124,7 +1097,7 @@ eas submit -p android --profile production   # usa ./play-service-account.json (
 | `heroku container:rm` pede *process type* | Sintaxe | `heroku container:rm web --app <app>` |
 | Build Maven falha dentro do Docker | Dependência ou memória | Rode `mvn -B package` localmente para ver o erro completo |
 
-## 14. Segurança
+## 13. Segurança
 
 ### O que está em vigor
 
@@ -1163,7 +1136,7 @@ eas submit -p android --profile production   # usa ./play-service-account.json (
 - [ ] Backup do banco configurado
 - [ ] Health checks monitorados
 
-## 15. Processo de trabalho
+## 14. Processo de trabalho
 
 ### Organização
 
@@ -1199,7 +1172,7 @@ Código funcionando · review aprovado · testes escritos e passando · lint sem
 - **Mobile:** componentes funcionais com hooks; Context API para estado global; sessão pelo `useAuth` do `@mentorias/auth`; chamadas à API só por `src/services/api.js`, sobre o `api` do pacote; tratamento de erro com `ErrorDisplay`/`showErrorAlert`; ESLint (flat config).
 - Detalhes adicionais em `CONTRIBUTING.md` (raiz). O material da aula de onboarding (Scrum, squads, sprints) está em [`docs/aulas/onboarding/`](aulas/onboarding/).
 
-## 16. Limitações conhecidas e próximos passos
+## 15. Limitações conhecidas e próximos passos
 
 ### Funcionalidades
 
@@ -1229,7 +1202,7 @@ Código funcionando · review aprovado · testes escritos e passando · lint sem
 - Sem testes no gateway. Os apps têm só os testes de exemplo do starter.
 - Os workflows de deploy apontam para o Railway e não são usados.
 
-## 17. Glossário
+## 16. Glossário
 
 | Termo | Significado |
 |---|---|
