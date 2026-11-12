@@ -242,7 +242,6 @@ Os controllers usam apenas a camada `service/`.
 | Firebase Auth + JWT próprio | Google Sign-In com pouco código; papéis controlados pelo backend | Três tokens no fluxo (Google, Firebase, JWT) |
 | Expo / React Native, também para o administrador | Três apps com a mesma base e o mesmo login (pacote `@mentorias/auth`) | Google Sign-In exige *development build* (não roda no Expo Go) |
 | Um repositório por app, com uma cópia do pacote de login | Cada equipe trabalha no seu repositório, sem depender das outras nem de um registro de pacotes | Uma correção no login precisa ser aplicada nos três repositórios |
-| Heroku para produção | Suporte a Docker e baixo custo | Um app (dyno) por serviço; os workflows de Railway no repositório não são usados |
 
 ## 4. Autenticação e autorização
 
