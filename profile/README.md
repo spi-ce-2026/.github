@@ -162,7 +162,7 @@ flowchart TB
 | [`spi-ce-2026/mentor`](https://github.com/spi-ce-2026/mentor) | App do mentor (`com.professorangoti.mentorapp`) | Equipe do mentor |
 | [`spi-ce-2026/administrador`](https://github.com/spi-ce-2026/administrador) | App do administrador (`com.professorangoti.adminApp`) | Equipe do administrador |
 
-Os repositórios dos apps são públicos e não têm o código do backend; os alunos usam o backend publicado no Heroku. Cada um tem uma cópia do pacote de login `@mentorias/auth` ([seção 9](#9-apps-mobile)) e as branches `main` e `develop`. A pasta `mobile/` deste repositório guarda a versão do starter da qual os três foram gerados; o desenvolvimento acontece nos repositórios da organização.
+Os repositórios dos apps são públicos e não têm o código do backend; os alunos usam o backend disponibilizado como imagem Docker. Cada um tem uma cópia do pacote de login `@mentorias/auth` ([seção 9](#9-apps-mobile)). O desenvolvimento acontece nos repositórios da organização.
 
 ### Serviços
 
