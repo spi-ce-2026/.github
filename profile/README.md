@@ -34,7 +34,7 @@ Este documento descreve o sistema **como ele está implementado hoje**. O backen
 
 - o **administrador** distribui vouchers e aprova mentores;
 - o **mentorado** resgata um voucher, descreve sua necessidade (tags) e recebe automaticamente o mentor mais compatível;
-- o **mentor** agenda a sessão em ferramenta externa (ex.: Calendly), registra o agendamento no app e informa se a sessão aconteceu;
+- o **mentor** agenda a sessão em ferramenta externa (ex.: Google Calendar), registra o agendamento no app e informa se a sessão aconteceu;
 - o **mentorado** avalia o mentor e a mentoria é concluída.
 
 **Contexto.** Projeto acadêmico do IFTM com o UberHub (ecossistema de inovação). É desenvolvido por equipes de estudantes em sprints Scrum (ver [seção 15](#15-processo-de-trabalho)). O código é aberto (licença MIT).
