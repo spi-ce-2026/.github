@@ -231,7 +231,7 @@ backend/<serviço>/src/main/java/com/example/<serviço>/
 └── service/     # Regras de negócio e clientes de outros serviços
 ```
 
-Os controllers usam apenas a camada `service/`. Desde a correção 4.1, a lógica testada é a mesma que roda em produção.
+Os controllers usam apenas a camada `service/`.
 
 ### Decisões de arquitetura
 
