@@ -2,7 +2,7 @@
 
 [Plano de implementação](https://spi-ce-2026.github.io/.github/) | [Política de Desenvolvimento em Equipe](https://docs.google.com/document/d/16muCiPGo4BYB7aT1GkjzMVyVIujAr7cUlV4XgSh12R4/edit?usp=sharing)
 
-O UberHub Mentorias conecta mentorados a mentores por meio de vouchers e matchmaking por tags. O sistema tem 6 serviços Spring Boot atrás de um API Gateway e três apps React Native: o do mentorado, o do mentor e o do administrador. O backend fica neste repositório; cada app tem o próprio repositório na organização `spi-ce-2026` ([seção 3](#repositórios)). O login é feito com Google via Firebase, e o backend emite o próprio JWT.
+O UberHub Mentorias conecta mentorados a mentores por meio de vouchers e matchmaking por tags. O sistema tem 6 serviços Spring Boot atrás de um API Gateway e três apps React Native: o do mentorado, o do mentor e o do administrador. Cada app React Native tem o próprio repositório na organização `spi-ce-2026` ([seção 3](#repositórios)). O login é feito com Google via Firebase, e o backend emite o próprio JWT.
 
 Este documento descreve o sistema **como ele está implementado hoje**. O backend está completo. Os apps são um *starter*: o login e a navegação base estão prontos, e as telas de cada funcionalidade são implementadas pelas equipes ([seção 9](#9-apps-mobile)). Onde a especificação original diverge do código, a divergência está indicada. Em caso de conflito, a ordem de precedência é: **código > este documento > documentos antigos**.
 
