@@ -58,7 +58,7 @@ O quadro abaixo vale para o **backend**. Nos apps, só o login e a navegação b
 | Funciona no backend | Implementado só em parte | Não implementado |
 |---|---|---|
 | Login Google (pronto nos 3 apps) | Dashboard (métricas imprecisas) | Notificações push (FCM) |
-| Cadastro e aprovação de mentor | Troca de mentor (mentorado solicita; aprovação é stub) | Deep linking |
+| Cadastro e aprovação de mentor | Troca de mentor (mentorado solicita; aprovação é stub) | Deep linking (necessário para push notification) |
 | Geração, resgate e consumo de vouchers | Matchmaking (regras simples, sem IA) | Expiração automática de mentorias (7 dias) |
 | Solicitação de mentoria com matchmaking | | Recuperação de senha (n/a com login Google) |
 | Agendamento, feedback do mentor, avaliação | | Vouchers restritos por tag |
