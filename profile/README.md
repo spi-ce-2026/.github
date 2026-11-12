@@ -214,7 +214,7 @@ Todas as chamadas são síncronas (REST via `RestTemplate`). Não há mensageria
 | Banco | MongoDB 7.0 (local, Docker) / MongoDB Atlas (produção) |
 | Autenticação | Firebase Auth (Google) + Firebase Admin SDK 9.2 no auth-service |
 | Apps mobile | React Native 0.86, Expo SDK 57 (os três apps), React 19.2, React Navigation 7, React Native Paper, `@react-native-google-signin`, Firebase JS 12 |
-| Infra | Docker / Docker Compose, Heroku (Container Registry), EAS (Expo) |
+| Infra | Docker / Docker Compose, Heroku (Container Registry) |
 | CI | GitHub Actions |
 
 ### Organização do código
@@ -823,7 +823,7 @@ Os modelos estão no `.env.example` da raiz deste repositório (backend) e no `.
 1. **Authentication → Sign-in method:** habilite o provedor **Google**.
 2. **Configurações do projeto → Seus apps:**
    - App **Web**: os valores do `firebaseConfig` viram as variáveis `EXPO_PUBLIC_FIREBASE_*` dos apps, que usam o SDK JavaScript do Firebase.
-   - Apps **Android**: `com.professorangoti.mentoradoapp`, `com.professorangoti.mentorapp` e `com.professorangoti.adminApp`, cada um com o **SHA-1** do certificado que assina o build. O *development build* usa o `android/app/debug.keystore` que o `expo prebuild` gera, igual em todas as máquinas (SHA-1 `5E:8F:16:06:…`; confira com `cd android && ./gradlew signingReport`). O APK do EAS usa outro certificado, que aparece em `eas credentials`. Baixe o `google-services.json` de novo depois de incluir um app ou um SHA-1; o mesmo arquivo serve para os três apps e vai para a raiz de cada repositório de app.
+   - Apps **Android**: `com.professorangoti.mentoradoapp`, `com.professorangoti.mentorapp` e `com.professorangoti.adminApp`, cada um com o **SHA-1** do certificado que assina o build. O *development build* usa o `android/app/debug.keystore` que o `expo prebuild` gera, igual em todas as máquinas (SHA-1 `5E:8F:16:06:…`; confira com `cd android && ./gradlew signingReport`). Baixe o `google-services.json` de novo depois de incluir um app ou um SHA-1; o mesmo arquivo serve para os três apps e vai para a raiz de cada repositório de app.
 3. **Web Client ID** (OAuth, tipo Web, criado pelo Firebase no Google Cloud): vai em `EXPO_PUBLIC_GOOGLE_CLIENT_ID`.
 4. **Contas de serviço → Gerar nova chave:** converta o JSON para uma linha e use como `FIREBASE_CREDENTIALS_JSON`. Esse arquivo é credencial: nunca vai para o repositório.
 
