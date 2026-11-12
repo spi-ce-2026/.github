@@ -18,12 +18,12 @@ Este documento descreve o sistema **como ele está implementado hoje**. O backen
 8. [Requisitos e regras de negócio](#8-requisitos-e-regras-de-negócio)
 9. [Apps mobile](#9-apps-mobile)
 10. [Ambiente de desenvolvimento](#10-ambiente-de-desenvolvimento)
-11. [CI/CD e deploy](#12-cicd-e-deploy)
-12. [Operação e solução de problemas](#13-operação-e-solução-de-problemas)
-13. [Segurança](#14-segurança)
-14. [Processo de trabalho](#15-processo-de-trabalho)
-15. [Limitações conhecidas e próximos passos](#16-limitações-conhecidas-e-próximos-passos)
-16. [Glossário](#17-glossário)
+11. [CI/CD e deploy](#11-cicd-e-deploy)
+12. [Operação e solução de problemas](#12-operação-e-solução-de-problemas)
+13. [Segurança](#13-segurança)
+14. [Processo de trabalho](#14-processo-de-trabalho)
+15. [Limitações conhecidas e próximos passos](#15-limitações-conhecidas-e-próximos-passos)
+16. [Glossário](#16-glossário)
 
 ## 1. Visão geral do produto
 
