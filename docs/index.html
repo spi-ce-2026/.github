@@ -179,9 +179,9 @@ footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line);
     <div><dt>Tempo por pessoa</dt><dd>≈ 28 h (13 h 20 de aula + 15 h EAD)</dd></div>
   </dl>
   <div class="legend" aria-label="Cores dos apps">
-    <span><i class="dot mentorado"></i>App do mentorado (<code>mentoradoApp</code>)</span>
-    <span><i class="dot mentor"></i>App do mentor (<code>mentorApp</code>)</span>
-    <span><i class="dot admin"></i>App do administrador (<code>adminApp</code>)</span>
+    <span><i class="dot mentorado"></i>App do mentorado (<code>mentorado</code>)</span>
+    <span><i class="dot mentor"></i>App do mentor (<code>mentor</code>)</span>
+    <span><i class="dot admin"></i>App do administrador (<code>administrador</code>)</span>
   </div>
   <ol class="fridays" aria-label="As seis sextas do período">
     <li class="start"><span class="d">06/11</span><span class="k">Início</span><span class="t">Abertura e sprint 1</span></li>
@@ -196,7 +196,7 @@ footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line);
 <section class="block" id="premissas">
   <h2>Premissas</h2>
   <ul class="plain">
-    <li><strong>Ponto de partida.</strong> O starter está publicado em três repositórios da organização <code>mentoria-iftm</code>, um por app: <a href="https://github.com/spi-ce-2026/mentorado">mentorado</a>, <a href="https://github.com/spi-ce-2026/mentor">mentor</a> e <a href="https://github.com/spi-ce-2026/administrador">administrador</a>. Ele traz os apps configurados, o login Google pronto, a navegação base com telas vazias, lint, testes e CI (<a href="#starter">detalhes abaixo</a>). As telas, as chamadas de domínio e as regras de negócio são implementadas pelos alunos. Os alunos não recebem o código do backend: usam o que está no ar no Heroku. Cada repositório traz a referência da API do seu app (<code>docs/API.md</code>), a especificação com os casos de uso UC01 a UC22 e os mockups (<code>docs/projeto</code>).</li>
+    <li><strong>Ponto de partida.</strong> O starter está publicado em três repositórios da organização <code>https://spi-ce-2026.github.io/</code>, um por app: <a href="https://github.com/spi-ce-2026/mentorado">mentorado</a>, <a href="https://github.com/spi-ce-2026/mentor">mentor</a> e <a href="https://github.com/spi-ce-2026/administrador">administrador</a>. Ele traz os apps configurados, o login Google pronto, a navegação base com telas vazias, lint, testes e CI (<a href="#starter">detalhes abaixo</a>). As telas, as chamadas de domínio e as regras de negócio são implementadas pelos alunos. Os alunos não recebem o código do backend: usam o que está no ar no Heroku. Cada repositório traz a referência da API do seu app (<code>docs/API.md</code>), a especificação com os casos de uso UC01 a UC22 e os mockups (<code>docs/projeto</code>).</li>
     <li><strong>Equipes.</strong> Três equipes de tamanho parecido, uma por app e por repositório. Cada repositório tem uma cópia do pacote de login, <code>packages/auth</code>: uma mudança nele é combinada com o professor, que a leva para os outros dois.</li>
     <li><strong>Prioridade.</strong> <span class="chip ess">Essencial</span> é o que o <a href="#roteiro">roteiro de ponta a ponta</a> exige. <span class="chip">Desejável</span> entra se sobrar tempo e é a primeira coisa a cortar quando a sprint atrasar.</li>
     <li><strong>Backend fora do escopo.</strong> O que depende de mudança no backend fica de fora (<a href="#fora">lista no fim</a>).</li>
